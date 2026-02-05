@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35913.81 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SortingVisualizer", "SortingVisualizer\SortingVisualizer.csproj", "{CC1F5ED4-910C-4929-9EDB-8E9BE33BEF1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SortingAlgorithms", "MyLib\SortingAlgorithms.csproj", "{EDBA81B1-7B80-47C5-A78B-8E36B5534FFF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC1F5ED4-910C-4929-9EDB-8E9BE33BEF1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC1F5ED4-910C-4929-9EDB-8E9BE33BEF1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC1F5ED4-910C-4929-9EDB-8E9BE33BEF1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC1F5ED4-910C-4929-9EDB-8E9BE33BEF1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDBA81B1-7B80-47C5-A78B-8E36B5534FFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDBA81B1-7B80-47C5-A78B-8E36B5534FFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDBA81B1-7B80-47C5-A78B-8E36B5534FFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDBA81B1-7B80-47C5-A78B-8E36B5534FFF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1C9EEF90-5044-4CEB-850B-6C065C2D8261}
+	EndGlobalSection
+EndGlobal
