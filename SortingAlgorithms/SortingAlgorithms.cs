@@ -15,7 +15,7 @@ namespace SortingAlgorithms
                 { "Bubble Sort", new BubbleSort() },
                 { "Selection Sort", new SelectionSort() },
                 { "Quick Sort", new QuickSort() },
-                { "Merge Sort", new MergeSort() },
+                //{ "Merge Sort", new MergeSort() },
             };
         }
     }

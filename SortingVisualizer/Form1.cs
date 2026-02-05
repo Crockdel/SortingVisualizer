@@ -21,6 +21,9 @@ namespace SortingVisualizer
         private Graphics graphics;
         private Bitmap bitmap;
         private bool isSorting = false;
+        private int highlightedIndex1 = -1;
+        private int highlightedIndex2 = -1;
+        private int[] arrayCopy;
 
         public MainForm()
         {
@@ -58,6 +61,12 @@ namespace SortingVisualizer
 
         private void SetupDrawing()
         {
+            if (pictureBox1.Width <= 0 || pictureBox1.Height <= 0)
+                return;
+
+            bitmap?.Dispose();
+            graphics?.Dispose();
+
             bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             graphics = Graphics.FromImage(bitmap);
             pictureBox1.Image = bitmap;
@@ -74,6 +83,9 @@ namespace SortingVisualizer
                 numbers[i] = numbers[j];
                 numbers[j] = temp;
             }
+
+            highlightedIndex1 = -1;
+            highlightedIndex2 = -1;
             VisualizeArray();
         }
 
@@ -86,34 +98,91 @@ namespace SortingVisualizer
             btnShuffle.Enabled = false;
             cmbAlgorithm.Enabled = false;
             numArraySize.Enabled = false;
+            trackBarSpeed.Enabled = false;
 
             // Создаем копию массива для сортировки
-            int[] arrayToSort = (int[])numbers.Clone();
+            arrayCopy = (int[])numbers.Clone();
 
-            // Запускаем сортировку в отдельном потоке
-            await Task.Run(() =>
+            // Получаем текущую задержку из TrackBar
+            delay = 100 - trackBarSpeed.Value;
+
+            // Устанавливаем задержку в алгоритме
+            if (selectedAlgorithm is BubbleSort bubbleSort)
+                bubbleSort.SetDelay(delay);
+            else if (selectedAlgorithm is SelectionSort selectionSort)
+                selectionSort.SetDelay(delay);
+            else if (selectedAlgorithm is QuickSort quickSort)
+                quickSort.SetDelay(delay);
+
+            try
             {
-                selectedAlgorithm.Sort(arrayToSort);
-            });
+                // Запускаем сортировку в отдельном потоке
+                await Task.Run(() =>
+                {
+                    selectedAlgorithm.Sort(
+                        arrayCopy,
+                        UpdateVisualizationCallback,
+                        HighlightElementsCallback
+                    );
+                });
+            }
+            finally
+            {
+                // Обновляем основной массив
+                numbers = arrayCopy;
 
-            // Обновляем основной массив
-            numbers = arrayToSort;
+                // Сбрасываем подсветку
+                highlightedIndex1 = -1;
+                highlightedIndex2 = -1;
+                VisualizeArray();
+
+                isSorting = false;
+                btnSort.Enabled = true;
+                btnShuffle.Enabled = true;
+                cmbAlgorithm.Enabled = true;
+                numArraySize.Enabled = true;
+                trackBarSpeed.Enabled = true;
+            }
+        }
+
+        private void UpdateVisualizationCallback(int[] array)
+        {
+            // Этот метод вызывается из другого потока
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action<int[]>(UpdateVisualizationCallback), array);
+                return;
+            }
+
+            numbers = array;
             VisualizeArray();
+            Application.DoEvents(); // Обновляем UI
+        }
 
-            isSorting = false;
-            btnSort.Enabled = true;
-            btnShuffle.Enabled = true;
-            cmbAlgorithm.Enabled = true;
-            numArraySize.Enabled = true;
+        private void HighlightElementsCallback(int index1, int index2)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action<int, int>(HighlightElementsCallback), index1, index2);
+                return;
+            }
+
+            highlightedIndex1 = index1;
+            highlightedIndex2 = index2;
+            VisualizeArray();
+            Application.DoEvents(); // Обновляем UI
         }
 
         private void VisualizeArray()
         {
-            if (bitmap == null || graphics == null) return;
+            if (bitmap == null || graphics == null || numbers == null)
+                return;
 
             graphics.Clear(Color.White);
 
-            int barWidth = pictureBox1.Width / numbers.Length;
+            if (numbers.Length == 0) return;
+
+            int barWidth = Math.Max(1, pictureBox1.Width / numbers.Length);
             int maxValue = numbers.Length;
 
             for (int i = 0; i < numbers.Length; i++)
@@ -122,9 +191,21 @@ namespace SortingVisualizer
                 int x = i * barWidth;
                 int y = pictureBox1.Height - barHeight;
 
-                // Используем градиентный цвет
-                int colorValue = (int)((numbers[i] / (float)maxValue) * 255);
-                Color barColor = Color.FromArgb(50, 100, colorValue);
+                // Выбираем цвет в зависимости от подсветки
+                Color barColor;
+                if (i == highlightedIndex1 || i == highlightedIndex2)
+                {
+                    barColor = Color.Red; // Подсвеченные элементы
+                }
+                else if (numbers[i] == i + 1)
+                {
+                    barColor = Color.Green; // Уже на своих местах
+                }
+                else
+                {
+                    int colorValue = (int)((numbers[i] / (float)maxValue) * 200);
+                    barColor = Color.FromArgb(50, 100, colorValue);
+                }
 
                 using (Brush brush = new SolidBrush(barColor))
                 {
@@ -134,6 +215,20 @@ namespace SortingVisualizer
                 using (Pen pen = new Pen(Color.Black, 1))
                 {
                     graphics.DrawRectangle(pen, x, y, barWidth - 1, barHeight);
+                }
+
+                // Отображаем значения для маленьких массивов
+                if (numbers.Length <= 30)
+                {
+                    using (Font font = new Font("Arial", 8))
+                    using (Brush textBrush = new SolidBrush(Color.Black))
+                    {
+                        string text = numbers[i].ToString();
+                        SizeF textSize = graphics.MeasureString(text, font);
+                        graphics.DrawString(text, font, textBrush,
+                            x + (barWidth - textSize.Width) / 2,
+                            y - 15);
+                    }
                 }
             }
 
@@ -180,16 +275,17 @@ namespace SortingVisualizer
 
         private void pictureBox1_SizeChanged(object sender, EventArgs e)
         {
-            if (bitmap != null)
-            {
-                bitmap.Dispose();
-            }
-            if (graphics != null)
-            {
-                graphics.Dispose();
-            }
             SetupDrawing();
             VisualizeArray();
+        }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            if (WindowState != FormWindowState.Minimized)
+            {
+                SetupDrawing();
+                VisualizeArray();
+            }
         }
     }
 }

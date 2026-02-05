@@ -9,6 +9,6 @@ namespace SortingAlgorithms
     public interface ISortingAlgorithm
     {
         string Name { get; }
-        void Sort(int[] array);
+        void Sort(int[] array, Action<int[]> updateVisualization, Action<int, int> highlightElements);
     }
 }
