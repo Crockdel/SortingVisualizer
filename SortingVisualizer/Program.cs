@@ -8,6 +8,7 @@ namespace SortingVisualizer
 {
     static class Program
     {
+        /// Главная точка входа для приложения
         [STAThread]
         static void Main()
         {

@@ -6,9 +6,16 @@ using System.Threading.Tasks;
 
 namespace SortingAlgorithms
 {
+    /// Интерфейс для алгоритмов сортировки с поддержкой визуализации
     public interface ISortingAlgorithm
     {
         string Name { get; }
-        void Sort(int[] array, Action<int[]> updateVisualization, Action<int, int> highlightElements);
+
+        /// Сортировка с возможностью визуализации каждого шага
+        void Sort(int[] array,
+                 Action<int[], int, int> onStep = null,
+                 Action<int> onProgress = null,
+                 int delay = 1,
+                 System.Threading.CancellationToken cancellationToken = default);
     }
 }

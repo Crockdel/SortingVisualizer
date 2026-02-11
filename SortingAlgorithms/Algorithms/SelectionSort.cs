@@ -8,12 +8,14 @@ using System.Threading;
 
 namespace SortingAlgorithms
 {
+    /// <summary>
+    /// Реализация алгоритма сортировки выбором с визуализацией
+    /// </summary>
     public class SelectionSort : ISortingAlgorithm
     {
         public string Name => "Selection Sort";
-        private int delay = 50;
 
-        public void Sort(int[] array, Action<int[]> updateVisualization, Action<int, int> highlightElements)
+        public void Sort(int[] array, Action<int[], int, int> onStep = null,Action<int> onProgress = null, int delay = 1, CancellationToken cancellationToken = default)
         {
             int n = array.Length;
 
@@ -21,27 +23,43 @@ namespace SortingAlgorithms
             {
                 int minIndex = i;
 
-                // Подсвечиваем текущий минимальный элемент
-                highlightElements?.Invoke(minIndex, -1);
-
+                // Поиск минимального элемента
                 for (int j = i + 1; j < n; j++)
                 {
-                    // Подсвечиваем сравниваемые элементы
-                    highlightElements?.Invoke(minIndex, j);
-                    Thread.Sleep(delay / 2);
+                    // Проверяем отмену
+                    if (cancellationToken.IsCancellationRequested)
+                        return;
+
+                    // Визуализируем сравнение
+                    onStep?.Invoke(array, minIndex, j);
+
+                    if (delay > 0)
+                        Thread.Sleep(delay);
 
                     if (array[j] < array[minIndex])
                     {
                         minIndex = j;
-                        highlightElements?.Invoke(minIndex, -1);
+                        // Визуализируем новый минимальный элемент
+                        onStep?.Invoke(array, i, minIndex);
                     }
                 }
 
+                // Обмен минимального элемента с текущим
                 if (minIndex != i)
                 {
+                    // Визуализируем перед обменом
+                    onStep?.Invoke(array, i, minIndex);
+
+                    if (delay > 0)
+                        Thread.Sleep(delay);
+
                     Swap(array, i, minIndex);
-                    updateVisualization?.Invoke(array);
-                    Thread.Sleep(delay);
+
+                    // Визуализируем после обмена
+                    onStep?.Invoke(array, i, minIndex);
+
+                    if (delay > 0)
+                        Thread.Sleep(delay);
                 }
             }
         }
@@ -51,11 +69,6 @@ namespace SortingAlgorithms
             int temp = array[i];
             array[i] = array[j];
             array[j] = temp;
-        }
-
-        public void SetDelay(int ms)
-        {
-            delay = ms;
         }
     }
 }
