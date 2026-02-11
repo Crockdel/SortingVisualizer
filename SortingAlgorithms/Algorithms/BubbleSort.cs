@@ -7,17 +7,18 @@ using System.Threading.Tasks;
 
 namespace SortingAlgorithms
 {
-    /// <summary>
-    /// Реализация алгоритма пузырьковой сортировки с визуализацией
-    /// </summary>
     public class BubbleSort : ISortingAlgorithm
     {
-        public string Name => "Bubble Sort";
+        public string Name => "Пузырьковая сортировка";
 
-        public void Sort(int[] array, Action<int[], int, int> onStep = null, int delay = 50, CancellationToken cancellationToken = default)
+        public void Sort(int[] array, Action<int[], int, int> onStep = null,
+                        Action<int> onProgress = null, int delay = 1,
+                        CancellationToken cancellationToken = default)
         {
             int n = array.Length;
             bool swapped;
+            int totalComparisons = n * (n - 1) / 2;
+            int comparisonsDone = 0;
 
             for (int i = 0; i < n - 1; i++)
             {
@@ -25,34 +26,46 @@ namespace SortingAlgorithms
 
                 for (int j = 0; j < n - i - 1; j++)
                 {
-                    // Проверяем отмену
                     if (cancellationToken.IsCancellationRequested)
                         return;
 
-                    // Визуализируем текущие сравниваемые элементы
-                    onStep?.Invoke(array, j, j + 1);
+                    comparisonsDone++;
 
-                    if (delay > 0)
-                        Thread.Sleep(delay);
+                    // Обновляем прогресс каждые 100 сравнений или для малых массивов
+                    if (array.Length > 1000 && comparisonsDone % 100 == 0)
+                        onProgress?.Invoke((int)((float)comparisonsDone / totalComparisons * 100));
 
-                    if (array[j] > array[j + 1])
+                    // Для больших массивов показываем только каждое 10-е сравнение
+                    if (array.Length <= 1000 || j % 10 == 0)
                     {
-                        // Меняем элементы местами
-                        Swap(array, j, j + 1);
-                        swapped = true;
-
-                        // Визуализируем после обмена
                         onStep?.Invoke(array, j, j + 1);
-
                         if (delay > 0)
                             Thread.Sleep(delay);
                     }
+
+                    if (array[j] > array[j + 1])
+                    {
+                        Swap(array, j, j + 1);
+                        swapped = true;
+
+                        if (array.Length <= 1000 || j % 10 == 0)
+                        {
+                            onStep?.Invoke(array, j, j + 1);
+                            if (delay > 0)
+                                Thread.Sleep(delay);
+                        }
+                    }
                 }
 
-                // Если за проход не было обменов, массив отсортирован
+                // Обновляем прогресс после каждого прохода
+                if (array.Length > 1000)
+                    onProgress?.Invoke((int)((float)comparisonsDone / totalComparisons * 100));
+
                 if (!swapped)
                     break;
             }
+
+            onProgress?.Invoke(100);
         }
 
         private void Swap(int[] array, int i, int j)

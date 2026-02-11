@@ -21,7 +21,8 @@ namespace SortingAlgorithms
                 { "Пузырьковая сортировка", new BubbleSort() },
                 { "Сортировка выбором", new SelectionSort() },
                 { "Сортировка вставками", new InsertionSort() },
-                { "Быстрая сортировка", new QuickSort() }
+                { "Быстрая сортировка", new QuickSort() },
+                {"Пирамидальная сортировка", new HeapSort() },
             };
         }
     }

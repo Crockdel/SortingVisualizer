@@ -14,7 +14,9 @@ namespace SortingAlgorithms
     {
         public string Name => "Insertion Sort";
 
-        public void Sort(int[] array, Action<int[], int, int> onStep = null, int delay = 50, CancellationToken cancellationToken = default)
+        public void Sort(int[] array, Action<int[], int, int> onStep = null,
+                        Action<int> onProgress = null, int delay = 1,
+                        CancellationToken cancellationToken = default)
         {
             for (int i = 1; i < array.Length; i++)
             {
