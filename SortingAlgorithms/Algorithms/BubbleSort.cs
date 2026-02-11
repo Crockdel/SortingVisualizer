@@ -7,30 +7,51 @@ using System.Threading.Tasks;
 
 namespace SortingAlgorithms
 {
+    /// <summary>
+    /// Реализация алгоритма пузырьковой сортировки с визуализацией
+    /// </summary>
     public class BubbleSort : ISortingAlgorithm
     {
         public string Name => "Bubble Sort";
-        private int delay = 50;
 
-        public void Sort(int[] array, Action<int[]> updateVisualization, Action<int, int> highlightElements)
+        public void Sort(int[] array, Action<int[], int, int> onStep = null, int delay = 50, CancellationToken cancellationToken = default)
         {
             int n = array.Length;
+            bool swapped;
+
             for (int i = 0; i < n - 1; i++)
             {
+                swapped = false;
+
                 for (int j = 0; j < n - i - 1; j++)
                 {
-                    // Подсвечиваем сравниваемые элементы
-                    highlightElements?.Invoke(j, j + 1);
+                    // Проверяем отмену
+                    if (cancellationToken.IsCancellationRequested)
+                        return;
+
+                    // Визуализируем текущие сравниваемые элементы
+                    onStep?.Invoke(array, j, j + 1);
+
+                    if (delay > 0)
+                        Thread.Sleep(delay);
 
                     if (array[j] > array[j + 1])
                     {
+                        // Меняем элементы местами
                         Swap(array, j, j + 1);
+                        swapped = true;
 
-                        // Обновляем визуализацию после каждого обмена
-                        updateVisualization?.Invoke(array);
-                        Thread.Sleep(delay);
+                        // Визуализируем после обмена
+                        onStep?.Invoke(array, j, j + 1);
+
+                        if (delay > 0)
+                            Thread.Sleep(delay);
                     }
                 }
+
+                // Если за проход не было обменов, массив отсортирован
+                if (!swapped)
+                    break;
             }
         }
 
@@ -39,11 +60,6 @@ namespace SortingAlgorithms
             int temp = array[i];
             array[i] = array[j];
             array[j] = temp;
-        }
-
-        public void SetDelay(int ms)
-        {
-            delay = ms;
         }
     }
 }

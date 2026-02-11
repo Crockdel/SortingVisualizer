@@ -8,22 +8,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SortingAlgorithms;
+using System.Threading;
 
 namespace SortingVisualizer
 {
+    /// Главная форма приложения для визуализации алгоритмов сортировки
     public partial class MainForm : Form
     {
-        private int[] numbers;
-        private Random random = new Random();
-        private Dictionary<string, ISortingAlgorithm> sortingAlgorithms;
-        private ISortingAlgorithm selectedAlgorithm;
-        private int delay = 50;
-        private Graphics graphics;
-        private Bitmap bitmap;
-        private bool isSorting = false;
-        private int highlightedIndex1 = -1;
-        private int highlightedIndex2 = -1;
-        private int[] arrayCopy;
+        private int[] numbers; // Массив чисел для сортировки
+        private Random random = new Random(); // Генератор случайных чисел
+        private Dictionary<string, ISortingAlgorithm> sortingAlgorithms; // Список алгоритмов
+        private ISortingAlgorithm selectedAlgorithm; // Выбранный алгоритм
+        private Graphics graphics; // Объект для рисования
+        private Bitmap bitmap; // Изображение для визуализации
+        private CancellationTokenSource cancellationTokenSource; // Для отмены сортировки
+        private int currentIndex1 = -1; // Первый выделяемый элемент
+        private int currentIndex2 = -1; // Второй выделяемый элемент
+        private bool isSorted = false; // Флаг отсортированности массива
 
         public MainForm()
         {
@@ -31,8 +32,10 @@ namespace SortingVisualizer
             InitializeAlgorithms();
             InitializeArray();
             SetupDrawing();
+            UpdateUIState();
         }
 
+        /// Инициализация списка алгоритмов
         private void InitializeAlgorithms()
         {
             sortingAlgorithms = SortingAlgorithmsList.GetAlgorithms();
@@ -49,6 +52,7 @@ namespace SortingVisualizer
             }
         }
 
+        /// Инициализация массива чисел
         private void InitializeArray()
         {
             numbers = new int[(int)numArraySize.Value];
@@ -57,24 +61,26 @@ namespace SortingVisualizer
                 numbers[i] = i + 1;
             }
             ShuffleArray();
+            isSorted = false;
         }
 
+        /// Настройка графики для отрисовки
         private void SetupDrawing()
         {
-            if (pictureBox1.Width <= 0 || pictureBox1.Height <= 0)
-                return;
-
-            bitmap?.Dispose();
-            graphics?.Dispose();
+            if (bitmap != null)
+                bitmap.Dispose();
+            if (graphics != null)
+                graphics.Dispose();
 
             bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             graphics = Graphics.FromImage(bitmap);
             pictureBox1.Image = bitmap;
         }
 
+        /// Перемешивание массива
         private void ShuffleArray()
         {
-            if (isSorting) return;
+            if (btnStopSort.Enabled) return; // Не перемешиваем во время сортировки
 
             for (int i = numbers.Length - 1; i > 0; i--)
             {
@@ -84,105 +90,136 @@ namespace SortingVisualizer
                 numbers[j] = temp;
             }
 
-            highlightedIndex1 = -1;
-            highlightedIndex2 = -1;
+            currentIndex1 = -1;
+            currentIndex2 = -1;
+            isSorted = false;
             VisualizeArray();
         }
 
-        private async void SortArray()
+        /// Запуск сортировки массива
+        private async void StartSorting()
         {
-            if (isSorting || selectedAlgorithm == null) return;
+            if (selectedAlgorithm == null || btnStopSort.Enabled) return;
 
-            isSorting = true;
+            // Создаем токен для отмены
+            cancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = cancellationTokenSource.Token;
+
+            // Блокируем UI элементы
             btnSort.Enabled = false;
             btnShuffle.Enabled = false;
+            btnStopSort.Enabled = true;
             cmbAlgorithm.Enabled = false;
             numArraySize.Enabled = false;
-            trackBarSpeed.Enabled = false;
+            numDelay.Enabled = false;
 
             // Создаем копию массива для сортировки
-            arrayCopy = (int[])numbers.Clone();
-
-            // Получаем текущую задержку из TrackBar
-            delay = 100 - trackBarSpeed.Value;
-
-            // Устанавливаем задержку в алгоритме
-            if (selectedAlgorithm is BubbleSort bubbleSort)
-                bubbleSort.SetDelay(delay);
-            else if (selectedAlgorithm is SelectionSort selectionSort)
-                selectionSort.SetDelay(delay);
-            else if (selectedAlgorithm is QuickSort quickSort)
-                quickSort.SetDelay(delay);
+            int[] arrayToSort = (int[])numbers.Clone();
+            int delay = (int)numDelay.Value;
 
             try
             {
                 // Запускаем сортировку в отдельном потоке
                 await Task.Run(() =>
                 {
-                    selectedAlgorithm.Sort(
-                        arrayCopy,
-                        UpdateVisualizationCallback,
-                        HighlightElementsCallback
-                    );
-                });
+                    selectedAlgorithm.Sort(arrayToSort, VisualizeStep, delay, cancellationToken);
+                }, cancellationToken);
+
+                // Если сортировка завершилась успешно
+                if (!cancellationToken.IsCancellationRequested)
+                {
+                    numbers = arrayToSort;
+                    isSorted = true;
+                    currentIndex1 = -1;
+                    currentIndex2 = -1;
+                    VisualizeArray();
+
+                    // Воспроизводим звук завершения
+                    System.Media.SystemSounds.Beep.Play();
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // Сортировка была отменена - это нормально
             }
             finally
             {
-                // Обновляем основной массив
-                numbers = arrayCopy;
-
-                // Сбрасываем подсветку
-                highlightedIndex1 = -1;
-                highlightedIndex2 = -1;
-                VisualizeArray();
-
-                isSorting = false;
+                // Разблокируем UI элементы
+                btnStopSort.Enabled = false;
                 btnSort.Enabled = true;
                 btnShuffle.Enabled = true;
                 cmbAlgorithm.Enabled = true;
                 numArraySize.Enabled = true;
-                trackBarSpeed.Enabled = true;
+                numDelay.Enabled = true;
+
+                cancellationTokenSource.Dispose();
+                cancellationTokenSource = null;
             }
         }
 
-        private void UpdateVisualizationCallback(int[] array)
+        /// Остановка сортировки
+        private void StopSorting()
         {
-            // Этот метод вызывается из другого потока
-            if (this.InvokeRequired)
+            if (cancellationTokenSource != null && !cancellationTokenSource.IsCancellationRequested)
             {
-                this.Invoke(new Action<int[]>(UpdateVisualizationCallback), array);
+                cancellationTokenSource.Cancel();
+            }
+        }
+
+        /// Визуализация одного шага алгоритма
+        private void VisualizeStep(int[] array, int index1, int index2)
+        {
+            if (InvokeRequired)
+            {
+                // Вызываем в UI потоке
+                Invoke(new Action(() => VisualizeStep(array, index1, index2)));
                 return;
             }
 
-            numbers = array;
+            // Обновляем текущие индексы для выделения
+            currentIndex1 = index1;
+            currentIndex2 = index2;
+
+            // Обновляем массив и визуализацию
+            numbers = (int[])array.Clone();
             VisualizeArray();
-            Application.DoEvents(); // Обновляем UI
+
+            // Обновляем информацию о текущем шаге
+            UpdateStepInfo(index1, index2);
+
+            // Принудительно обновляем отображение
+            Application.DoEvents();
         }
 
-        private void HighlightElementsCallback(int index1, int index2)
+        /// Обновление информации о текущем шаге
+        private void UpdateStepInfo(int index1, int index2)
         {
-            if (this.InvokeRequired)
+            string info = "Текущий шаг: ";
+
+            if (index1 >= 0 && index2 >= 0)
             {
-                this.Invoke(new Action<int, int>(HighlightElementsCallback), index1, index2);
-                return;
+                info += $"сравнение элементов [{index1}]={numbers[index1]} и [{index2}]={numbers[index2]}";
+            }
+            else if (index1 >= 0)
+            {
+                info += $"работа с элементом [{index1}]={numbers[index1]}";
+            }
+            else
+            {
+                info += "ожидание";
             }
 
-            highlightedIndex1 = index1;
-            highlightedIndex2 = index2;
-            VisualizeArray();
-            Application.DoEvents(); // Обновляем UI
+            lblStepInfo.Text = info;
         }
 
+        /// Визуализация всего массива
         private void VisualizeArray()
         {
-            if (bitmap == null || graphics == null || numbers == null)
-                return;
+            if (bitmap == null || graphics == null) return;
 
             graphics.Clear(Color.White);
 
-            if (numbers.Length == 0) return;
-
-            int barWidth = Math.Max(1, pictureBox1.Width / numbers.Length);
+            int barWidth = pictureBox1.Width / numbers.Length;
             int maxValue = numbers.Length;
 
             for (int i = 0; i < numbers.Length; i++)
@@ -191,20 +228,25 @@ namespace SortingVisualizer
                 int x = i * barWidth;
                 int y = pictureBox1.Height - barHeight;
 
-                // Выбираем цвет в зависимости от подсветки
+                // Выбираем цвет в зависимости от состояния элемента
                 Color barColor;
-                if (i == highlightedIndex1 || i == highlightedIndex2)
+
+                if (isSorted)
                 {
-                    barColor = Color.Red; // Подсвеченные элементы
+                    // Для отсортированного массива - зеленый градиент
+                    int colorValue = (int)((numbers[i] / (float)maxValue) * 155) + 100;
+                    barColor = Color.FromArgb(100, colorValue, 100);
                 }
-                else if (numbers[i] == i + 1)
+                else if (i == currentIndex1 || i == currentIndex2)
                 {
-                    barColor = Color.Green; // Уже на своих местах
+                    // Для активных элементов - красный
+                    barColor = Color.Red;
                 }
                 else
                 {
-                    int colorValue = (int)((numbers[i] / (float)maxValue) * 200);
-                    barColor = Color.FromArgb(50, 100, colorValue);
+                    // Для обычных элементов - синий градиент
+                    int colorValue = (int)((numbers[i] / (float)maxValue) * 155) + 100;
+                    barColor = Color.FromArgb(100, 100, colorValue);
                 }
 
                 using (Brush brush = new SolidBrush(barColor))
@@ -217,7 +259,7 @@ namespace SortingVisualizer
                     graphics.DrawRectangle(pen, x, y, barWidth - 1, barHeight);
                 }
 
-                // Отображаем значения для маленьких массивов
+                // Подписываем элементы, если массив небольшой
                 if (numbers.Length <= 30)
                 {
                     using (Font font = new Font("Arial", 8))
@@ -227,27 +269,61 @@ namespace SortingVisualizer
                         SizeF textSize = graphics.MeasureString(text, font);
                         graphics.DrawString(text, font, textBrush,
                             x + (barWidth - textSize.Width) / 2,
-                            y - 15);
+                            y - textSize.Height);
                     }
                 }
+            }
+
+            // Подписываем оси
+            using (Font axisFont = new Font("Arial", 10))
+            using (Brush axisBrush = new SolidBrush(Color.Black))
+            {
+                graphics.DrawString("Индекс элемента →", axisFont, axisBrush,
+                    pictureBox1.Width / 2 - 50, pictureBox1.Height - 20);
+                graphics.DrawString("↑ Значение", axisFont, axisBrush, 10, 10);
             }
 
             pictureBox1.Invalidate();
         }
 
+        /// Обновление состояния UI элементов
+        private void UpdateUIState()
+        {
+            bool isSorting = btnStopSort.Enabled;
+
+            btnSort.Enabled = !isSorting && !isSorted;
+            btnShuffle.Enabled = !isSorting;
+            cmbAlgorithm.Enabled = !isSorting;
+            numArraySize.Enabled = !isSorting;
+            numDelay.Enabled = !isSorting;
+
+            lblStatus.Text = isSorting ? "Сортировка..." : (isSorted ? "Отсортировано" : "Готово");
+            lblStatus.ForeColor = isSorting ? Color.Blue : (isSorted ? Color.Green : Color.Black);
+        }
+
+        // Обработчики событий
         private void MainForm_Load(object sender, EventArgs e)
         {
             VisualizeArray();
+            UpdateUIState();
         }
 
         private void btnShuffle_Click(object sender, EventArgs e)
         {
             ShuffleArray();
+            UpdateUIState();
         }
 
         private void btnSort_Click(object sender, EventArgs e)
         {
-            SortArray();
+            StartSorting();
+            UpdateUIState();
+        }
+
+        private void btnStopSort_Click(object sender, EventArgs e)
+        {
+            StopSorting();
+            UpdateUIState();
         }
 
         private void cmbAlgorithm_SelectedIndexChanged(object sender, EventArgs e)
@@ -256,36 +332,37 @@ namespace SortingVisualizer
             {
                 string selected = cmbAlgorithm.SelectedItem.ToString();
                 selectedAlgorithm = sortingAlgorithms[selected];
+                lblAlgorithmInfo.Text = $"Алгоритм:";
             }
         }
 
         private void numArraySize_ValueChanged(object sender, EventArgs e)
         {
-            if (!isSorting)
+            if (!btnStopSort.Enabled)
             {
                 InitializeArray();
+                UpdateUIState();
             }
-        }
-
-        private void trackBarSpeed_Scroll(object sender, EventArgs e)
-        {
-            delay = 100 - trackBarSpeed.Value;
-            lblSpeed.Text = $"Скорость: {trackBarSpeed.Value}%";
         }
 
         private void pictureBox1_SizeChanged(object sender, EventArgs e)
         {
-            SetupDrawing();
-            VisualizeArray();
-        }
-
-        private void MainForm_Resize(object sender, EventArgs e)
-        {
-            if (WindowState != FormWindowState.Minimized)
+            if (Width > 0 && Height > 0)
             {
                 SetupDrawing();
                 VisualizeArray();
             }
+        }
+
+        private void numDelay_ValueChanged(object sender, EventArgs e)
+        {
+            lblDelay.Text = $"Задержка(мс):";
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            StopSorting();
+            base.OnFormClosing(e);
         }
     }
 }
