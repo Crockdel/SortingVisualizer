@@ -4,75 +4,62 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using SortingAlgorithms;
+using SortingVisualizer.Helpers;
 
-namespace SortingAlgorithms
+public class BubbleSort : ISortingAlgorithm
 {
-    public class BubbleSort : ISortingAlgorithm
+    public string Name => "Пузырьковая сортировка";
+
+    public void Sort(int[] array, Action<int[], int, int> onStep = null,
+                    Action<int> onProgress = null, double delayMs = 1.0,
+                    CancellationToken cancellationToken = default)
     {
-        public string Name => "Пузырьковая сортировка";
+        int n = array.Length;
+        bool swapped;
+        int totalComparisons = n * (n - 1) / 2;
+        int comparisonsDone = 0;
 
-        public void Sort(int[] array, Action<int[], int, int> onStep = null,
-                        Action<int> onProgress = null, int delay = 1,
-                        CancellationToken cancellationToken = default)
+        for (int i = 0; i < n - 1; i++)
         {
-            int n = array.Length;
-            bool swapped;
-            int totalComparisons = n * (n - 1) / 2;
-            int comparisonsDone = 0;
+            swapped = false;
 
-            for (int i = 0; i < n - 1; i++)
+            for (int j = 0; j < n - i - 1; j++)
             {
-                swapped = false;
+                if (cancellationToken.IsCancellationRequested)
+                    return;
 
-                for (int j = 0; j < n - i - 1; j++)
-                {
-                    if (cancellationToken.IsCancellationRequested)
-                        return;
+                comparisonsDone++;
 
-                    comparisonsDone++;
-
-                    // Обновляем прогресс каждые 100 сравнений или для малых массивов
-                    if (array.Length > 1000 && comparisonsDone % 100 == 0)
-                        onProgress?.Invoke((int)((float)comparisonsDone / totalComparisons * 100));
-
-                    // Для больших массивов показываем только каждое 10-е сравнение
-                    if (array.Length <= 1000 || j % 10 == 0)
-                    {
-                        onStep?.Invoke(array, j, j + 1);
-                        if (delay > 0)
-                            Thread.Sleep(delay);
-                    }
-
-                    if (array[j] > array[j + 1])
-                    {
-                        Swap(array, j, j + 1);
-                        swapped = true;
-
-                        if (array.Length <= 1000 || j % 10 == 0)
-                        {
-                            onStep?.Invoke(array, j, j + 1);
-                            if (delay > 0)
-                                Thread.Sleep(delay);
-                        }
-                    }
-                }
-
-                // Обновляем прогресс после каждого прохода
-                if (array.Length > 1000)
+                if (comparisonsDone % 100 == 0)
                     onProgress?.Invoke((int)((float)comparisonsDone / totalComparisons * 100));
 
-                if (!swapped)
-                    break;
+                onStep?.Invoke(array, j, j + 1);
+
+                if (array[j] > array[j + 1])
+                {
+                    int temp = array[j];
+                    array[j] = array[j + 1];
+                    array[j + 1] = temp;
+                    swapped = true;
+
+                    onStep?.Invoke(array, j, j + 1);
+                }
+
+                // Используем точную задержку
+                if (delayMs > 0)
+                {
+                    if (delayMs < 1.0)
+                        PrecisionTimer.Delay(delayMs);
+                    else
+                        Thread.Sleep((int)delayMs);
+                }
             }
 
-            onProgress?.Invoke(100);
+            if (!swapped)
+                break;
         }
 
-        private void Swap(int[] array, int i, int j)
-        {
-            int temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
-        }
+        onProgress?.Invoke(100);
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace SortingVisualizer
 {
@@ -11,23 +9,17 @@ namespace SortingVisualizer
         private ComboBox cmbAlgorithm;
         private Button btnSort;
         private Button btnShuffle;
-        private Button btnStopSort;
+        private Button btnStop;
         private Button btnResetStats;
         private NumericUpDown numArraySize;
-        private Label lblArraySize;
-        private NumericUpDown numDelay;
-        private Label lblDelay;
-        private Label lblStepInfo;
-        private Label lblStatus;
-        private Label lblAlgorithmInfo;
-        private Label lblTitle;
+        private TrackBar trackSpeed;
         private ProgressBar progressBar;
-        private Label lblSteps;
-        private Label lblComparisons;
-        private Label lblSwaps;
-        private Label lblOpsPerSec;
+        private Label lblAlgorithm;
+        private Label lblSpeed;
+        private Label lblStatus;
+        private Label lblStats;
         private CheckBox chkSound;
-        private GroupBox grpStats;
+        private NumericUpDown numExactDelay;  // Добавляем NumericUpDown для точной задержки
 
         protected override void Dispose(bool disposing)
         {
@@ -40,255 +32,212 @@ namespace SortingVisualizer
 
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.cmbAlgorithm = new System.Windows.Forms.ComboBox();
             this.btnSort = new System.Windows.Forms.Button();
             this.btnShuffle = new System.Windows.Forms.Button();
-            this.btnStopSort = new System.Windows.Forms.Button();
+            this.btnStop = new System.Windows.Forms.Button();
             this.btnResetStats = new System.Windows.Forms.Button();
             this.numArraySize = new System.Windows.Forms.NumericUpDown();
-            this.lblArraySize = new System.Windows.Forms.Label();
-            this.numDelay = new System.Windows.Forms.NumericUpDown();
-            this.lblDelay = new System.Windows.Forms.Label();
-            this.lblStepInfo = new System.Windows.Forms.Label();
-            this.lblStatus = new System.Windows.Forms.Label();
-            this.lblAlgorithmInfo = new System.Windows.Forms.Label();
-            this.lblTitle = new System.Windows.Forms.Label();
+            this.trackSpeed = new System.Windows.Forms.TrackBar();
             this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.lblSteps = new System.Windows.Forms.Label();
-            this.lblComparisons = new System.Windows.Forms.Label();
-            this.lblSwaps = new System.Windows.Forms.Label();
-            this.lblOpsPerSec = new System.Windows.Forms.Label();
+            this.lblAlgorithm = new System.Windows.Forms.Label();
+            this.lblSpeed = new System.Windows.Forms.Label();
+            this.lblStatus = new System.Windows.Forms.Label();
+            this.lblStats = new System.Windows.Forms.Label();
             this.chkSound = new System.Windows.Forms.CheckBox();
-            this.grpStats = new System.Windows.Forms.GroupBox();
+            this.numExactDelay = new System.Windows.Forms.NumericUpDown();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numArraySize)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numDelay)).BeginInit();
-            this.grpStats.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackSpeed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numExactDelay)).BeginInit();
             this.SuspendLayout();
+
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.BackColor = System.Drawing.Color.White;
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 40);
+            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(860, 400);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.SizeChanged += new System.EventHandler(this.pictureBox1_SizeChanged);
+
             // 
             // cmbAlgorithm
             // 
             this.cmbAlgorithm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cmbAlgorithm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbAlgorithm.FormattingEnabled = true;
-            this.cmbAlgorithm.Location = new System.Drawing.Point(100, 460);
+            this.cmbAlgorithm.Location = new System.Drawing.Point(12, 420);
             this.cmbAlgorithm.Name = "cmbAlgorithm";
-            this.cmbAlgorithm.Size = new System.Drawing.Size(180, 21);
+            this.cmbAlgorithm.Size = new System.Drawing.Size(150, 24);
             this.cmbAlgorithm.TabIndex = 1;
+            this.toolTip.SetToolTip(this.cmbAlgorithm, "Выберите алгоритм сортировки");
             this.cmbAlgorithm.SelectedIndexChanged += new System.EventHandler(this.cmbAlgorithm_SelectedIndexChanged);
+
             // 
             // btnSort
             // 
             this.btnSort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnSort.BackColor = System.Drawing.Color.LightGreen;
-            this.btnSort.Location = new System.Drawing.Point(300, 455);
+            this.btnSort.Location = new System.Drawing.Point(170, 420);
             this.btnSort.Name = "btnSort";
-            this.btnSort.Size = new System.Drawing.Size(120, 30);
+            this.btnSort.Size = new System.Drawing.Size(100, 30);
             this.btnSort.TabIndex = 2;
             this.btnSort.Text = "Сортировать";
+            this.toolTip.SetToolTip(this.btnSort, "Запустить сортировку");
             this.btnSort.UseVisualStyleBackColor = false;
             this.btnSort.Click += new System.EventHandler(this.btnSort_Click);
+
             // 
             // btnShuffle
             // 
             this.btnShuffle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnShuffle.Location = new System.Drawing.Point(426, 455);
+            this.btnShuffle.Location = new System.Drawing.Point(280, 420);
             this.btnShuffle.Name = "btnShuffle";
-            this.btnShuffle.Size = new System.Drawing.Size(120, 30);
+            this.btnShuffle.Size = new System.Drawing.Size(100, 30);
             this.btnShuffle.TabIndex = 3;
             this.btnShuffle.Text = "Перемешать";
+            this.toolTip.SetToolTip(this.btnShuffle, "Перемешать массив");
             this.btnShuffle.UseVisualStyleBackColor = true;
             this.btnShuffle.Click += new System.EventHandler(this.btnShuffle_Click);
+
             // 
-            // btnStopSort
+            // btnStop
             // 
-            this.btnStopSort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnStopSort.BackColor = System.Drawing.Color.LightCoral;
-            this.btnStopSort.Enabled = false;
-            this.btnStopSort.Location = new System.Drawing.Point(552, 455);
-            this.btnStopSort.Name = "btnStopSort";
-            this.btnStopSort.Size = new System.Drawing.Size(120, 30);
-            this.btnStopSort.TabIndex = 4;
-            this.btnStopSort.Text = "Остановить";
-            this.btnStopSort.UseVisualStyleBackColor = false;
-            this.btnStopSort.Click += new System.EventHandler(this.btnStopSort_Click);
+            this.btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnStop.BackColor = System.Drawing.Color.LightCoral;
+            this.btnStop.Enabled = false;
+            this.btnStop.Location = new System.Drawing.Point(390, 420);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(80, 30);
+            this.btnStop.TabIndex = 4;
+            this.btnStop.Text = "Стоп";
+            this.toolTip.SetToolTip(this.btnStop, "Остановить сортировку");
+            this.btnStop.UseVisualStyleBackColor = false;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
+
             // 
             // btnResetStats
             // 
-            this.btnResetStats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnResetStats.Location = new System.Drawing.Point(696, 455);
+            this.btnResetStats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnResetStats.Location = new System.Drawing.Point(480, 420);
             this.btnResetStats.Name = "btnResetStats";
-            this.btnResetStats.Size = new System.Drawing.Size(120, 30);
+            this.btnResetStats.Size = new System.Drawing.Size(100, 30);
             this.btnResetStats.TabIndex = 5;
-            this.btnResetStats.Text = "Сбросить стат.";
-            this.btnResetStats.UseVisualStyleBackColor = true;
+            this.btnResetStats.Text = "Сброс стат.";
+            this.toolTip.SetToolTip(this.btnResetStats, "Сбросить статистику");
             this.btnResetStats.Click += new System.EventHandler(this.btnResetStats_Click);
+
             // 
             // numArraySize
             // 
             this.numArraySize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.numArraySize.Location = new System.Drawing.Point(100, 500);
-            this.numArraySize.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numArraySize.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
+            this.numArraySize.Location = new System.Drawing.Point(12, 460);
+            this.numArraySize.Minimum = new decimal(new int[] { 10, 0, 0, 0 });
+            this.numArraySize.Maximum = new decimal(new int[] { 500, 0, 0, 0 });
             this.numArraySize.Name = "numArraySize";
-            this.numArraySize.Size = new System.Drawing.Size(80, 20);
+            this.numArraySize.Size = new System.Drawing.Size(80, 22);
             this.numArraySize.TabIndex = 6;
-            this.numArraySize.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
+            this.numArraySize.Value = new decimal(new int[] { 100, 0, 0, 0 });
+            this.toolTip.SetToolTip(this.numArraySize, "Размер массива (10-500)");
             this.numArraySize.ValueChanged += new System.EventHandler(this.numArraySize_ValueChanged);
+
             // 
-            // lblArraySize
+            // trackSpeed
             // 
-            this.lblArraySize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblArraySize.AutoSize = true;
-            this.lblArraySize.Location = new System.Drawing.Point(12, 503);
-            this.lblArraySize.Name = "lblArraySize";
-            this.lblArraySize.Size = new System.Drawing.Size(66, 13);
-            this.lblArraySize.TabIndex = 7;
-            this.lblArraySize.Text = "Элементов:";
+            this.trackSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.trackSpeed.Location = new System.Drawing.Point(170, 460);
+            this.trackSpeed.Minimum = 0;
+            this.trackSpeed.Maximum = 200;
+            this.trackSpeed.Name = "trackSpeed";
+            this.trackSpeed.Size = new System.Drawing.Size(200, 56);
+            this.trackSpeed.TabIndex = 7;
+            this.trackSpeed.TickFrequency = 10;
+            this.trackSpeed.Value = 10;
+            this.trackSpeed.Scroll += new System.EventHandler(this.trackSpeed_Scroll);
+
             // 
-            // numDelay
+            // numExactDelay
             // 
-            this.numDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.numDelay.Location = new System.Drawing.Point(300, 500);
-            this.numDelay.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numDelay.Name = "numDelay";
-            this.numDelay.Size = new System.Drawing.Size(80, 20);
-            this.numDelay.TabIndex = 8;
-            this.numDelay.Value = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.numDelay.ValueChanged += new System.EventHandler(this.numDelay_ValueChanged);
+            this.numExactDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.numExactDelay.Location = new System.Drawing.Point(380, 460);
+            this.numExactDelay.Name = "numExactDelay";
+            this.numExactDelay.Size = new System.Drawing.Size(80, 22);
+            this.numExactDelay.TabIndex = 14;
+            this.numExactDelay.DecimalPlaces = 2;
+            this.numExactDelay.Increment = 0.1m;
+            this.numExactDelay.Minimum = 0;
+            this.numExactDelay.Maximum = 1000;
+            this.numExactDelay.Value = 10;
+            this.toolTip.SetToolTip(this.numExactDelay, "Точная задержка в миллисекундах (0.01 - 1000)");
+            this.numExactDelay.ValueChanged += new System.EventHandler(this.numExactDelay_ValueChanged);
+
             // 
-            // lblDelay
+            // progressBar
             // 
-            this.lblDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblDelay.AutoSize = true;
-            this.lblDelay.Location = new System.Drawing.Point(200, 503);
-            this.lblDelay.Name = "lblDelay";
-            this.lblDelay.Size = new System.Drawing.Size(84, 13);
-            this.lblDelay.TabIndex = 9;
-            this.lblDelay.Text = "Задержка (мс):";
+            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar.Location = new System.Drawing.Point(12, 500);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(860, 20);
+            this.progressBar.TabIndex = 8;
+
             // 
-            // lblStepInfo
+            // lblAlgorithm
             // 
-            this.lblStepInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblStepInfo.AutoSize = true;
-            this.lblStepInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lblStepInfo.Location = new System.Drawing.Point(400, 503);
-            this.lblStepInfo.Name = "lblStepInfo";
-            this.lblStepInfo.Size = new System.Drawing.Size(82, 15);
-            this.lblStepInfo.TabIndex = 10;
-            this.lblStepInfo.Text = "Текущий шаг:";
+            this.lblAlgorithm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblAlgorithm.AutoSize = true;
+            this.lblAlgorithm.Location = new System.Drawing.Point(600, 425);
+            this.lblAlgorithm.Name = "lblAlgorithm";
+            this.lblAlgorithm.Size = new System.Drawing.Size(70, 16);
+            this.lblAlgorithm.TabIndex = 9;
+            this.lblAlgorithm.Text = "Алгоритм:";
+
+            // 
+            // lblSpeed
+            // 
+            this.lblSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblSpeed.AutoSize = true;
+            this.lblSpeed.Location = new System.Drawing.Point(470, 465);
+            this.lblSpeed.Name = "lblSpeed";
+            this.lblSpeed.Size = new System.Drawing.Size(94, 16);
+            this.lblSpeed.TabIndex = 10;
+            this.lblSpeed.Text = "Задержка: 10 мс";
+
             // 
             // lblStatus
             // 
             this.lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lblStatus.Location = new System.Drawing.Point(625, 505);
+            this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.lblStatus.Location = new System.Drawing.Point(780, 425);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(55, 15);
+            this.lblStatus.Size = new System.Drawing.Size(63, 18);
             this.lblStatus.TabIndex = 11;
             this.lblStatus.Text = "Готово";
+
             // 
-            // lblAlgorithmInfo
+            // lblStats
             // 
-            this.lblAlgorithmInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblAlgorithmInfo.AutoSize = true;
-            this.lblAlgorithmInfo.Location = new System.Drawing.Point(12, 463);
-            this.lblAlgorithmInfo.Name = "lblAlgorithmInfo";
-            this.lblAlgorithmInfo.Size = new System.Drawing.Size(59, 13);
-            this.lblAlgorithmInfo.TabIndex = 12;
-            this.lblAlgorithmInfo.Text = "Алгоритм:";
-            // 
-            // lblTitle
-            // 
-            this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lblTitle.Location = new System.Drawing.Point(12, 9);
-            this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(231, 20);
-            this.lblTitle.TabIndex = 13;
-            this.lblTitle.Text = "Визуализатор сортировок";
-            // 
-            // progressBar
-            // 
-            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.Location = new System.Drawing.Point(12, 530);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(860, 20);
-            this.progressBar.TabIndex = 14;
-            this.progressBar.Visible = false;
-            // 
-            // lblSteps
-            // 
-            this.lblSteps.AutoSize = true;
-            this.lblSteps.Location = new System.Drawing.Point(10, 20);
-            this.lblSteps.Name = "lblSteps";
-            this.lblSteps.Size = new System.Drawing.Size(51, 13);
-            this.lblSteps.TabIndex = 0;
-            this.lblSteps.Text = "Шагов: 0";
-            // 
-            // lblComparisons
-            // 
-            this.lblComparisons.AutoSize = true;
-            this.lblComparisons.Location = new System.Drawing.Point(10, 40);
-            this.lblComparisons.Name = "lblComparisons";
-            this.lblComparisons.Size = new System.Drawing.Size(74, 13);
-            this.lblComparisons.TabIndex = 1;
-            this.lblComparisons.Text = "Сравнений: 0";
-            // 
-            // lblSwaps
-            // 
-            this.lblSwaps.AutoSize = true;
-            this.lblSwaps.Location = new System.Drawing.Point(150, 20);
-            this.lblSwaps.Name = "lblSwaps";
-            this.lblSwaps.Size = new System.Drawing.Size(65, 13);
-            this.lblSwaps.TabIndex = 2;
-            this.lblSwaps.Text = "Обменов: 0";
-            // 
-            // lblOpsPerSec
-            // 
-            this.lblOpsPerSec.AutoSize = true;
-            this.lblOpsPerSec.Location = new System.Drawing.Point(150, 40);
-            this.lblOpsPerSec.Name = "lblOpsPerSec";
-            this.lblOpsPerSec.Size = new System.Drawing.Size(56, 13);
-            this.lblOpsPerSec.TabIndex = 3;
-            this.lblOpsPerSec.Text = "Оп/сек: 0";
+            this.lblStats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblStats.AutoSize = true;
+            this.lblStats.Location = new System.Drawing.Point(12, 530);
+            this.lblStats.Name = "lblStats";
+            this.lblStats.Size = new System.Drawing.Size(56, 16);
+            this.lblStats.TabIndex = 12;
+            this.lblStats.Text = "Статистика";
+
             // 
             // chkSound
             // 
@@ -296,59 +245,45 @@ namespace SortingVisualizer
             this.chkSound.AutoSize = true;
             this.chkSound.Checked = true;
             this.chkSound.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkSound.Location = new System.Drawing.Point(822, 463);
+            this.chkSound.Location = new System.Drawing.Point(800, 530);
             this.chkSound.Name = "chkSound";
-            this.chkSound.Size = new System.Drawing.Size(50, 17);
-            this.chkSound.TabIndex = 15;
+            this.chkSound.Size = new System.Drawing.Size(62, 20);
+            this.chkSound.TabIndex = 13;
             this.chkSound.Text = "Звук";
-            this.chkSound.UseVisualStyleBackColor = true;
-            // 
-            // grpStats
-            // 
-            this.grpStats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.grpStats.Controls.Add(this.lblSteps);
-            this.grpStats.Controls.Add(this.lblComparisons);
-            this.grpStats.Controls.Add(this.lblSwaps);
-            this.grpStats.Controls.Add(this.lblOpsPerSec);
-            this.grpStats.Location = new System.Drawing.Point(12, 550);
-            this.grpStats.Name = "grpStats";
-            this.grpStats.Size = new System.Drawing.Size(250, 70);
-            this.grpStats.TabIndex = 16;
-            this.grpStats.TabStop = false;
-            this.grpStats.Text = "Статистика";
+            this.toolTip.SetToolTip(this.chkSound, "Звуковое оповещение по окончании");
+
             // 
             // MainForm
             // 
-            this.ClientSize = new System.Drawing.Size(884, 640);
-            this.Controls.Add(this.grpStats);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(884, 561);
+            this.Controls.Add(this.numExactDelay);
             this.Controls.Add(this.chkSound);
-            this.Controls.Add(this.progressBar);
-            this.Controls.Add(this.lblTitle);
-            this.Controls.Add(this.lblAlgorithmInfo);
+            this.Controls.Add(this.lblStats);
             this.Controls.Add(this.lblStatus);
-            this.Controls.Add(this.lblStepInfo);
-            this.Controls.Add(this.lblDelay);
-            this.Controls.Add(this.numDelay);
-            this.Controls.Add(this.lblArraySize);
+            this.Controls.Add(this.lblSpeed);
+            this.Controls.Add(this.lblAlgorithm);
+            this.Controls.Add(this.progressBar);
+            this.Controls.Add(this.trackSpeed);
             this.Controls.Add(this.numArraySize);
             this.Controls.Add(this.btnResetStats);
-            this.Controls.Add(this.btnStopSort);
+            this.Controls.Add(this.btnStop);
             this.Controls.Add(this.btnShuffle);
             this.Controls.Add(this.btnSort);
             this.Controls.Add(this.cmbAlgorithm);
             this.Controls.Add(this.pictureBox1);
-            this.MinimumSize = new System.Drawing.Size(900, 679);
+            this.MinimumSize = new System.Drawing.Size(900, 600);
+            this.MaximumSize = new System.Drawing.Size(1920, 1080);
             this.Name = "MainForm";
-            this.Text = "Визуализатор алгоритмов сортировки";
-            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Text = "Визуализатор сортировок";
+            this.ResizeRedraw = true;
+
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numArraySize)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numDelay)).EndInit();
-            this.grpStats.ResumeLayout(false);
-            this.grpStats.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackSpeed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numExactDelay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
     }
 }

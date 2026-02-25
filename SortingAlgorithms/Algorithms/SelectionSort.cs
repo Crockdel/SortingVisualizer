@@ -8,9 +8,9 @@ using System.Threading;
 
 namespace SortingAlgorithms
 {
-    /// <summary>
+
     /// Реализация алгоритма сортировки выбором с визуализацией
-    /// </summary>
+
     public class SelectionSort : ISortingAlgorithm
     {
         public string Name => "Selection Sort";

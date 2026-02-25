@@ -7,9 +7,9 @@ using System.Threading;
 
 namespace SortingAlgorithms
 {
-    /// <summary>
+
     /// Реализация алгоритма сортировки вставками с визуализацией
-    /// </summary>
+
     public class InsertionSort : ISortingAlgorithm
     {
         public string Name => "Insertion Sort";

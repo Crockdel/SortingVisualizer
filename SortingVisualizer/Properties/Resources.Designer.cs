@@ -12,9 +12,9 @@ namespace SortingVisualizer.Properties
 {
 
 
-    /// <summary>
+
     ///   Класс ресурсов со строгим типом для поиска локализованных строк и пр.
-    /// </summary>
+
     // Этот класс был автоматически создан при помощи StronglyTypedResourceBuilder
     // класс с помощью таких средств, как ResGen или Visual Studio.
     // Для добавления или удаления члена измените файл .ResX, а затем перезапустите ResGen
@@ -34,9 +34,9 @@ namespace SortingVisualizer.Properties
         {
         }
 
-        /// <summary>
+    
         ///   Возврат кэшированного экземпляра ResourceManager, используемого этим классом.
-        /// </summary>
+    
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
         internal static global::System.Resources.ResourceManager ResourceManager
         {
@@ -51,10 +51,10 @@ namespace SortingVisualizer.Properties
             }
         }
 
-        /// <summary>
+    
         ///   Переопределяет свойство CurrentUICulture текущего потока для всех
         ///   подстановки ресурсов с помощью этого класса ресурсов со строгим типом.
-        /// </summary>
+    
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
         internal static global::System.Globalization.CultureInfo Culture
         {

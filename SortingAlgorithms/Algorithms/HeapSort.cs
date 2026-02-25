@@ -7,9 +7,9 @@ using System.Threading;
 
 namespace SortingAlgorithms
 {
-    /// <summary>
+
     /// Пирамидальная сортировка (Heap Sort) - эффективна для больших массивов
-    /// </summary>
+
     public class HeapSort : ISortingAlgorithm
     {
         public string Name => "Пирамидальная сортировка";

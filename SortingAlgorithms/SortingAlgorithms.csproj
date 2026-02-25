@@ -46,6 +46,7 @@
     <Compile Include="Algorithms\QuickSort.cs" />
     <Compile Include="Algorithms\SelectionSort.cs" />
     <Compile Include="Algorithms\HeapSort.cs" />
+    <Compile Include="Helpers\PrecisionTimer.cs" />
     <Compile Include="ISortingAlgorithm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SortingAlgorithmsList.cs" />
