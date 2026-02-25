@@ -4,32 +4,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using SortingVisualizer.Helpers;
 
 namespace SortingAlgorithms
 {
-
-    /// Пирамидальная сортировка (Heap Sort) - эффективна для больших массивов
-
     public class HeapSort : ISortingAlgorithm
     {
         public string Name => "Пирамидальная сортировка";
 
         public void Sort(int[] array, Action<int[], int, int> onStep = null,
-                        Action<int> onProgress = null, int delay = 1,
+                        Action<int> onProgress = null, double delayMs = 1.0,
                         CancellationToken cancellationToken = default)
         {
             int n = array.Length;
-            int totalOps = 2 * n * (int)Math.Log(n + 1);
-            int opsDone = 0;
+            int totalOperations = 2 * n * (int)Math.Log(n + 1);
+            int operationsDone = 0;
 
-            // Построение кучи
+            // Построение кучи (heapify)
             for (int i = n / 2 - 1; i >= 0; i--)
             {
-                Heapify(array, n, i, onStep, delay, cancellationToken);
+                Heapify(array, n, i, onStep, delayMs, cancellationToken);
 
-                opsDone += n / 2 - i;
-                if (n > 1000 && opsDone % 100 == 0)
-                    onProgress?.Invoke((int)((float)opsDone / totalOps * 50));
+                operationsDone += n / 2 - i;
+                if (operationsDone % 100 == 0 || n <= 100)
+                    onProgress?.Invoke((int)((float)operationsDone / totalOperations * 50));
             }
 
             // Извлечение элементов из кучи
@@ -38,34 +36,35 @@ namespace SortingAlgorithms
                 if (cancellationToken.IsCancellationRequested)
                     return;
 
+                onStep?.Invoke(array, 0, i);
+
                 // Перемещаем текущий корень в конец
-                if (n <= 1000 || i % 10 == 0)
-                {
-                    onStep?.Invoke(array, 0, i);
-                    if (delay > 0) Thread.Sleep(delay);
-                }
+                int temp = array[0];
+                array[0] = array[i];
+                array[i] = temp;
 
-                Swap(array, 0, i);
+                onStep?.Invoke(array, 0, i);
 
-                if (n <= 1000 || i % 10 == 0)
+                // Задержка
+                if (delayMs > 0)
                 {
-                    onStep?.Invoke(array, 0, i);
-                    if (delay > 0) Thread.Sleep(delay);
+                    if (delayMs < 1.0)
+                        PrecisionTimer.Delay(delayMs);
+                    else
+                        Thread.Sleep((int)delayMs);
                 }
 
                 // Вызываем heapify на уменьшенной куче
-                Heapify(array, i, 0, onStep, delay, cancellationToken);
+                Heapify(array, i, 0, onStep, delayMs, cancellationToken);
 
-                opsDone += n - i;
-                if (n > 1000 && opsDone % 100 == 0)
-                    onProgress?.Invoke(50 + (int)((float)opsDone / totalOps * 50));
+                operationsDone += n - i;
+                if (operationsDone % 100 == 0 || n <= 100)
+                    onProgress?.Invoke(50 + (int)((float)operationsDone / totalOperations * 50));
             }
-
-            onProgress?.Invoke(100);
         }
 
         private void Heapify(int[] array, int n, int i,
-                            Action<int[], int, int> onStep, int delay,
+                            Action<int[], int, int> onStep, double delayMs,
                             CancellationToken cancellationToken)
         {
             int largest = i;
@@ -77,11 +76,7 @@ namespace SortingAlgorithms
                 if (cancellationToken.IsCancellationRequested)
                     return;
 
-                if (array.Length <= 1000)
-                {
-                    onStep?.Invoke(array, largest, left);
-                    if (delay > 0) Thread.Sleep(delay);
-                }
+                onStep?.Invoke(array, largest, left);
 
                 if (array[left] > array[largest])
                     largest = left;
@@ -92,11 +87,7 @@ namespace SortingAlgorithms
                 if (cancellationToken.IsCancellationRequested)
                     return;
 
-                if (array.Length <= 1000)
-                {
-                    onStep?.Invoke(array, largest, right);
-                    if (delay > 0) Thread.Sleep(delay);
-                }
+                onStep?.Invoke(array, largest, right);
 
                 if (array[right] > array[largest])
                     largest = right;
@@ -104,29 +95,25 @@ namespace SortingAlgorithms
 
             if (largest != i)
             {
-                if (array.Length <= 1000)
+                onStep?.Invoke(array, i, largest);
+
+                int temp = array[i];
+                array[i] = array[largest];
+                array[largest] = temp;
+
+                onStep?.Invoke(array, i, largest);
+
+                // Задержка
+                if (delayMs > 0)
                 {
-                    onStep?.Invoke(array, i, largest);
-                    if (delay > 0) Thread.Sleep(delay);
+                    if (delayMs < 1.0)
+                        PrecisionTimer.Delay(delayMs);
+                    else
+                        Thread.Sleep((int)delayMs);
                 }
 
-                Swap(array, i, largest);
-
-                if (array.Length <= 1000)
-                {
-                    onStep?.Invoke(array, i, largest);
-                    if (delay > 0) Thread.Sleep(delay);
-                }
-
-                Heapify(array, n, largest, onStep, delay, cancellationToken);
+                Heapify(array, n, largest, onStep, delayMs, cancellationToken);
             }
-        }
-
-        private void Swap(int[] array, int i, int j)
-        {
-            int temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
         }
     }
 }

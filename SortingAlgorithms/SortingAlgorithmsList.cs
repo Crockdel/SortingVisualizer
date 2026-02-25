@@ -23,6 +23,7 @@ namespace SortingAlgorithms
                 { "Сортировка вставками", new InsertionSort() },
                 { "Быстрая сортировка", new QuickSort() },
                 {"Пирамидальная сортировка", new HeapSort() },
+                {"Сортировка слиянием", new MergeSort() },
             };
         }
     }

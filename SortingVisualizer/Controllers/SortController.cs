@@ -46,7 +46,7 @@ namespace SortingVisualizer.Controllers
             _stepTimer = new Stopwatch();
         }
 
-        public async Task StartSorting(SortArray array, ISortingAlgorithm algorithm, int delayMs)
+        public async Task StartSorting(SortArray array, ISortingAlgorithm algorithm, double delayMs)
         {
             if (IsSorting) return;
 
@@ -64,14 +64,14 @@ namespace SortingVisualizer.Controllers
                 var cancellationToken = _cancellationTokenSource.Token;
 
                 // Оптимизация: если задержка 0, используем максимальную скорость
-                double effectiveDelay = delayMs; // теперь double
+                bool fastMode = delayMs == 0;
 
                 await Task.Run(() =>
                 {
                     algorithm.Sort(arrayToSort.Values,
-                        (arr, i1, i2) => OnStep(arr, i1, i2, array, effectiveDelay == 0),
+                        (arr, i1, i2) => OnStep(arr, i1, i2, array, fastMode),
                         (progress) => ProgressUpdated?.Invoke(progress),
-                        effectiveDelay, // передаем double
+                        delayMs, // Теперь передаем double
                         cancellationToken);
                 }, cancellationToken);
 

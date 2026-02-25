@@ -4,62 +4,71 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using SortingVisualizer.Helpers;
 
 namespace SortingAlgorithms
 {
-
-    /// Реализация алгоритма сортировки вставками с визуализацией
-
     public class InsertionSort : ISortingAlgorithm
     {
-        public string Name => "Insertion Sort";
+        public string Name => "Сортировка вставками";
 
         public void Sort(int[] array, Action<int[], int, int> onStep = null,
-                        Action<int> onProgress = null, int delay = 1,
+                        Action<int> onProgress = null, double delayMs = 1.0,
                         CancellationToken cancellationToken = default)
         {
-            for (int i = 1; i < array.Length; i++)
+            int n = array.Length;
+            int totalComparisons = n * (n - 1) / 2;
+            int comparisonsDone = 0;
+
+            for (int i = 1; i < n; i++)
             {
                 int key = array[i];
                 int j = i - 1;
 
-                // Визуализируем текущий элемент для вставки
                 onStep?.Invoke(array, i, j);
 
-                if (delay > 0)
-                    Thread.Sleep(delay);
+                if (delayMs > 0)
+                {
+                    if (delayMs < 1.0)
+                        PrecisionTimer.Delay(delayMs);
+                    else
+                        Thread.Sleep((int)delayMs);
+                }
 
-                // Перемещаем элементы, которые больше key
+                // Сдвиг элементов
                 while (j >= 0 && array[j] > key)
                 {
-                    // Проверяем отмену
                     if (cancellationToken.IsCancellationRequested)
                         return;
 
-                    // Визуализируем сдвиг
-                    onStep?.Invoke(array, j, j + 1);
+                    comparisonsDone++;
 
-                    if (delay > 0)
-                        Thread.Sleep(delay);
+                    onStep?.Invoke(array, j, j + 1);
 
                     array[j + 1] = array[j];
                     j--;
 
-                    // Визуализируем после сдвига
                     onStep?.Invoke(array, j + 1, j + 2);
 
-                    if (delay > 0)
-                        Thread.Sleep(delay);
+                    // Прогресс
+                    if (comparisonsDone % 100 == 0 || n <= 100)
+                        onProgress?.Invoke((int)((float)comparisonsDone / totalComparisons * 100));
+
+                    // Задержка
+                    if (delayMs > 0)
+                    {
+                        if (delayMs < 1.0)
+                            PrecisionTimer.Delay(delayMs);
+                        else
+                            Thread.Sleep((int)delayMs);
+                    }
                 }
 
                 array[j + 1] = key;
-
-                // Визуализируем размещение элемента
                 onStep?.Invoke(array, j + 1, -1);
-
-                if (delay > 0)
-                    Thread.Sleep(delay);
             }
+
+            onProgress?.Invoke(100);
         }
     }
 }
