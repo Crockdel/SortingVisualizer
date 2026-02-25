@@ -20,7 +20,6 @@ namespace SortingVisualizer
         private int _activeIndex2 = -1;
         private bool _isSorted = false;
         private bool _isSorting = false;
-        ToolTip toolTip = new ToolTip();
 
         public MainForm()
         {
@@ -143,7 +142,18 @@ namespace SortingVisualizer
 
         private void UpdateStats()
         {
-            lblStats.Text = _sortController.Statistics.ToString();
+            var stats = _sortController.Statistics;
+
+            // Форматируем числа с разделителями разрядов
+            string steps = stats.Steps.ToString("N0");
+            string comparisons = stats.Comparisons.ToString("N0");
+            string swaps = stats.Swaps.ToString("N0");
+            string opsPerSec = stats.OperationsPerSecond.ToString("N0");
+
+            lblStats.Text = $"👣 Шаги: {steps} | " +
+                           $"⚖️ Сравнений: {comparisons} | " +
+                           $"🔄 Обменов: {swaps} | " +
+                           $"⚡ Оп/сек: {opsPerSec}";
         }
 
         private void UpdateUIState()
@@ -194,7 +204,89 @@ namespace SortingVisualizer
             _sortController.Statistics.Reset();
             UpdateStats();
         }
+private void btnHelp_Click(object sender, EventArgs e)
+        {
+            // Получаем информацию о текущем алгоритме
+            string algorithmInfo = _selectedAlgorithm != null
+                ? GetAlgorithmComplexity(_selectedAlgorithm)
+                : "Алгоритм не выбран";
 
+            // Формируем сообщение
+            string message =
+                "📊 СТАТИСТИКА СОРТИРОВКИ 📊\n\n" +
+                "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" +
+
+                "🔹 ШАГИ (Steps)\n" +
+                "   Общее количество операций, показанных на экране.\n" +
+                "   Включает сравнения и обмены элементов.\n" +
+                "   Чем меньше шагов, тем эффективнее алгоритм.\n\n" +
+
+                "🔹 СРАВНЕНИЯ (Comparisons)\n" +
+                "   Сколько раз алгоритм сравнивал два элемента.\n" +
+                "   Основная мера сложности сортировки.\n" +
+                "   Для массива из n элементов:\n" +
+                "   • Хорошие алгоритмы: O(n log n) сравнений\n" +
+                "   • Плохие алгоритмы: O(n²) сравнений\n\n" +
+
+                "🔹 ОБМЕНЫ (Swaps)\n" +
+                "   Сколько раз элементы менялись местами.\n" +
+                "   Показывает физическую перестановку данных.\n" +
+                "   • Selection Sort делает очень мало обменов\n" +
+                "   • Bubble Sort может делать много обменов\n\n" +
+
+                "🔹 ОП/СЕК (Ops/sec)\n" +
+                "   Скорость работы - шагов в секунду.\n" +
+                "   Зависит от:\n" +
+                "   • Задержки (delay)\n" +
+                "   • Производительности компьютера\n" +
+                "   • Сложности одного шага\n\n" +
+
+                "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" +
+                $"📌 ТЕКУЩИЙ АЛГОРИТМ: {_selectedAlgorithm?.Name ?? "не выбран"}\n" +
+                $"{algorithmInfo}\n\n" +
+
+                "💡 Совет: Для обучения ставьте задержку 50-100 мс.\n" +
+                "⚡ Для тестов ставьте 0 мс и смотрите на Оп/сек.\n" +
+                "🎲 Bogo Sort - это шутка, не ждите от него скорости!\n\n" +
+
+                "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" +
+                "👆 Нажмите на любой элемент управления,\n" +
+                "   чтобы увидеть подсказку (tooltip).";
+
+            MessageBox.Show(message, "📚 Помощь по статистике",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        // Получить информацию о сложности алгоритма
+        private string GetAlgorithmComplexity(ISortingAlgorithm algorithm)
+        {
+            switch (algorithm.Name)
+            {
+                case string s when s.Contains("Пузырьковая"):
+                    return "   Сложность: O(n²) - медленный, но простой\n   Обменов: много";
+
+                case string s when s.Contains("выбором"):
+                    return "   Сложность: O(n²) - всегда делает n²/2 сравнений\n   Обменов: мало (n-1)";
+
+                case string s when s.Contains("вставками"):
+                    return "   Сложность: O(n²) - быстр для почти отсортированных\n   Обменов: зависит от данных";
+
+                case string s when s.Contains("Быстрая"):
+                    return "   Сложность: O(n log n) - очень быстрый\n   Использует разделяй и властвуй";
+
+                case string s when s.Contains("слиянием"):
+                    return "   Сложность: O(n log n) - стабильный\n   Требует дополнительной памяти";
+
+                case string s when s.Contains("Пирамидальная"):
+                    return "   Сложность: O(n log n) - быстрый\n   Не требует дополнительной памяти";
+
+                case string s when s.Contains("Bogo"):
+                    return "   Сложность: O((n+1)!) - ужасно медленный!\n   Для 10 элементов: миллионы лет";
+
+                default:
+                    return "   Информация недоступна";
+            }
+        }
         private void cmbAlgorithm_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbAlgorithm.SelectedItem != null && !_isSorting)
