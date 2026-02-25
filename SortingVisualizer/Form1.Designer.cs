@@ -144,7 +144,7 @@ namespace SortingVisualizer
             // 
             this.numArraySize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.numArraySize.Location = new System.Drawing.Point(12, 460);
-            this.numArraySize.Minimum = new decimal(new int[] { 10, 0, 0, 0 });
+            this.numArraySize.Minimum = new decimal(new int[] { 5, 0, 0, 0 });
             this.numArraySize.Maximum = new decimal(new int[] { 500, 0, 0, 0 });
             this.numArraySize.Name = "numArraySize";
             this.numArraySize.Size = new System.Drawing.Size(80, 22);
