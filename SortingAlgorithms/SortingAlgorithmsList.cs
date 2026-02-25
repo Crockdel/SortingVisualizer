@@ -24,6 +24,7 @@ namespace SortingAlgorithms
                 { "Быстрая сортировка", new QuickSort() },
                 {"Пирамидальная сортировка", new HeapSort() },
                 {"Сортировка слиянием", new MergeSort() },
+                { "🥹 Bogo Sort (Глупая)", new BogoSort() }
             };
         }
     }
