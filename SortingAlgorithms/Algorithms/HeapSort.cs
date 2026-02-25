@@ -17,17 +17,26 @@ namespace SortingAlgorithms
                         CancellationToken cancellationToken = default)
         {
             int n = array.Length;
-            int totalOperations = 2 * n * (int)Math.Log(n + 1);
+            int totalOperations = 2 * n * (int)Math.Max(1, Math.Log(n + 1));
             int operationsDone = 0;
 
             // Построение кучи (heapify)
             for (int i = n / 2 - 1; i >= 0; i--)
             {
+                if (cancellationToken.IsCancellationRequested)
+                    return;
+
                 Heapify(array, n, i, onStep, delayMs, cancellationToken);
 
-                operationsDone += n / 2 - i;
-                if (operationsDone % 100 == 0 || n <= 100)
-                    onProgress?.Invoke((int)((float)operationsDone / totalOperations * 50));
+                operationsDone++;
+
+                // Безопасное обновление прогресса (первая половина - 50%)
+                if (onProgress != null && (operationsDone % 10 == 0 || n <= 50))
+                {
+                    int progress = (int)((float)operationsDone / Math.Max(1, totalOperations) * 50);
+                    progress = Math.Min(50, Math.Max(0, progress)); // Ограничиваем 0-50
+                    onProgress(progress);
+                }
             }
 
             // Извлечение элементов из кучи
@@ -57,10 +66,19 @@ namespace SortingAlgorithms
                 // Вызываем heapify на уменьшенной куче
                 Heapify(array, i, 0, onStep, delayMs, cancellationToken);
 
-                operationsDone += n - i;
-                if (operationsDone % 100 == 0 || n <= 100)
-                    onProgress?.Invoke(50 + (int)((float)operationsDone / totalOperations * 50));
+                operationsDone++;
+
+                // Безопасное обновление прогресса (вторая половина - от 50% до 100%)
+                if (onProgress != null && (operationsDone % 10 == 0 || n <= 50))
+                {
+                    int progress = 50 + (int)((float)(operationsDone - n / 2) / Math.Max(1, totalOperations - n / 2) * 50);
+                    progress = Math.Min(100, Math.Max(50, progress)); // Ограничиваем 50-100
+                    onProgress(progress);
+                }
             }
+
+            // Финальный прогресс 100%
+            onProgress?.Invoke(100);
         }
 
         private void Heapify(int[] array, int n, int i,
@@ -71,6 +89,7 @@ namespace SortingAlgorithms
             int left = 2 * i + 1;
             int right = 2 * i + 2;
 
+            // Проверяем левого потомка
             if (left < n)
             {
                 if (cancellationToken.IsCancellationRequested)
@@ -82,6 +101,7 @@ namespace SortingAlgorithms
                     largest = left;
             }
 
+            // Проверяем правого потомка
             if (right < n)
             {
                 if (cancellationToken.IsCancellationRequested)
@@ -93,10 +113,12 @@ namespace SortingAlgorithms
                     largest = right;
             }
 
+            // Если нужно обменять
             if (largest != i)
             {
                 onStep?.Invoke(array, i, largest);
 
+                // Обмен
                 int temp = array[i];
                 array[i] = array[largest];
                 array[largest] = temp;
@@ -112,6 +134,7 @@ namespace SortingAlgorithms
                         Thread.Sleep((int)delayMs);
                 }
 
+                // Рекурсивно heapify для затронутого поддерева
                 Heapify(array, n, largest, onStep, delayMs, cancellationToken);
             }
         }

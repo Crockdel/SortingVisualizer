@@ -175,8 +175,8 @@ namespace SortingVisualizer
             this.numExactDelay.Name = "numExactDelay";
             this.numExactDelay.Size = new System.Drawing.Size(80, 22);
             this.numExactDelay.TabIndex = 14;
-            this.numExactDelay.DecimalPlaces = 2;
-            this.numExactDelay.Increment = 0.1m;
+            this.numExactDelay.DecimalPlaces = 0;
+            this.numExactDelay.Increment = 1m;
             this.numExactDelay.Minimum = 0;
             this.numExactDelay.Maximum = 1000;
             this.numExactDelay.Value = 10;
