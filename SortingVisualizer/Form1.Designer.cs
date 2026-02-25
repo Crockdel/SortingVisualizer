@@ -151,25 +151,13 @@ namespace SortingVisualizer
             // 
             this.numArraySize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.numArraySize.Location = new System.Drawing.Point(12, 440);
-            this.numArraySize.Maximum = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
-            this.numArraySize.Minimum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
+            this.numArraySize.Maximum = new decimal(new int[] {500,0,0,0});
+            this.numArraySize.Minimum = new decimal(new int[] {5,0,0,0});
             this.numArraySize.Name = "numArraySize";
             this.numArraySize.Size = new System.Drawing.Size(80, 22);
             this.numArraySize.TabIndex = 6;
             this.toolTip.SetToolTip(this.numArraySize, "Размер массива (5-500)");
-            this.numArraySize.Value = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
+            this.numArraySize.Value = new decimal(new int[] {35,0,0,0});
             this.numArraySize.ValueChanged += new System.EventHandler(this.numArraySize_ValueChanged);
             // 
             // trackSpeed
@@ -250,27 +238,15 @@ namespace SortingVisualizer
             // numExactDelay
             // 
             this.numExactDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.numExactDelay.DecimalPlaces = 2;
-            this.numExactDelay.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
+            this.numExactDelay.DecimalPlaces = 0;
+            this.numExactDelay.Increment = new decimal(new int[] {10,0,0,65536});
             this.numExactDelay.Location = new System.Drawing.Point(360, 440);
-            this.numExactDelay.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
+            this.numExactDelay.Maximum = new decimal(new int[] {1000,0,0,0});
             this.numExactDelay.Name = "numExactDelay";
             this.numExactDelay.Size = new System.Drawing.Size(80, 22);
             this.numExactDelay.TabIndex = 14;
             this.toolTip.SetToolTip(this.numExactDelay, "Точная задержка в миллисекундах (0 - 1000)");
-            this.numExactDelay.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
+            this.numExactDelay.Value = new decimal(new int[] {10,0,0,0});
             this.numExactDelay.ValueChanged += new System.EventHandler(this.numExactDelay_ValueChanged);
             // 
             // MainForm
