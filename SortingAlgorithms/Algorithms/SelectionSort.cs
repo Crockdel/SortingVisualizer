@@ -5,19 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using SortingAlgorithms;
 using System.Threading;
+using SortingVisualizer.Helpers;
 
 namespace SortingAlgorithms
 {
-    /// <summary>
-    /// Реализация алгоритма сортировки выбором с визуализацией
-    /// </summary>
     public class SelectionSort : ISortingAlgorithm
     {
-        public string Name => "Selection Sort";
+        public string Name => "Сортировка выбором";
 
-        public void Sort(int[] array, Action<int[], int, int> onStep = null,Action<int> onProgress = null, int delay = 1, CancellationToken cancellationToken = default)
+        public void Sort(int[] array, Action<int[], int, int> onStep = null,
+                        Action<int> onProgress = null, double delayMs = 1.0,
+                        CancellationToken cancellationToken = default)
         {
             int n = array.Length;
+            int totalComparisons = n * (n - 1) / 2;
+            int comparisonsDone = 0;
 
             for (int i = 0; i < n - 1; i++)
             {
@@ -26,49 +28,46 @@ namespace SortingAlgorithms
                 // Поиск минимального элемента
                 for (int j = i + 1; j < n; j++)
                 {
-                    // Проверяем отмену
                     if (cancellationToken.IsCancellationRequested)
                         return;
 
-                    // Визуализируем сравнение
-                    onStep?.Invoke(array, minIndex, j);
+                    comparisonsDone++;
 
-                    if (delay > 0)
-                        Thread.Sleep(delay);
+                    onStep?.Invoke(array, minIndex, j);
 
                     if (array[j] < array[minIndex])
                     {
                         minIndex = j;
-                        // Визуализируем новый минимальный элемент
-                        onStep?.Invoke(array, i, minIndex);
+                    }
+
+                    // Прогресс
+                    if (comparisonsDone % 100 == 0 || n <= 100)
+                        onProgress?.Invoke((int)((float)comparisonsDone / totalComparisons * 100));
+
+                    // Задержка
+                    if (delayMs > 0)
+                    {
+                        if (delayMs < 1.0)
+                            PrecisionTimer.Delay(delayMs);
+                        else
+                            Thread.Sleep((int)delayMs);
                     }
                 }
 
-                // Обмен минимального элемента с текущим
+                // Обмен
                 if (minIndex != i)
                 {
-                    // Визуализируем перед обменом
                     onStep?.Invoke(array, i, minIndex);
 
-                    if (delay > 0)
-                        Thread.Sleep(delay);
+                    int temp = array[i];
+                    array[i] = array[minIndex];
+                    array[minIndex] = temp;
 
-                    Swap(array, i, minIndex);
-
-                    // Визуализируем после обмена
                     onStep?.Invoke(array, i, minIndex);
-
-                    if (delay > 0)
-                        Thread.Sleep(delay);
                 }
             }
-        }
 
-        private void Swap(int[] array, int i, int j)
-        {
-            int temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
+            onProgress?.Invoke(100);
         }
     }
 }

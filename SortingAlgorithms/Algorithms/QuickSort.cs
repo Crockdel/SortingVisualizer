@@ -4,55 +4,87 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using SortingVisualizer.Helpers;
 
 namespace SortingAlgorithms
 {
     public class QuickSort : ISortingAlgorithm
     {
-        private int totalOperations = 0;
-        private int operationsDone = 0;
-
         public string Name => "Быстрая сортировка";
+        private int _totalOperations;
+        private int _operationsDone;
 
         public void Sort(int[] array, Action<int[], int, int> onStep = null,
-                        Action<int> onProgress = null, int delay = 1,
+                        Action<int> onProgress = null, double delayMs = 1.0,
                         CancellationToken cancellationToken = default)
         {
-            totalOperations = EstimateOperations(array.Length);
-            operationsDone = 0;
+            _totalOperations = EstimateOperations(array.Length);
+            _operationsDone = 0;
 
-            QuickSortRecursive(array, 0, array.Length - 1, onStep, onProgress, delay, cancellationToken);
+            // Используем итеративную версию для избежания переполнения стека
+            IterativeQuickSort(array, 0, array.Length - 1, onStep, onProgress, delayMs, cancellationToken);
+
             onProgress?.Invoke(100);
         }
 
-        private int EstimateOperations(int n)
-        {
-            // Примерная оценка операций для быстрой сортировки: O(n log n)
-            return (int)(n * Math.Log(n + 1) * 2);
-        }
-
-        private void QuickSortRecursive(int[] array, int low, int high,
+        private void IterativeQuickSort(int[] array, int low, int high,
                                        Action<int[], int, int> onStep,
-                                       Action<int> onProgress, int delay,
+                                       Action<int> onProgress, double delayMs,
                                        CancellationToken cancellationToken)
         {
-            if (low < high)
+            // Стек для хранения границ
+            Stack<Tuple<int, int>> stack = new Stack<Tuple<int, int>>();
+            stack.Push(new Tuple<int, int>(low, high));
+
+            while (stack.Count > 0)
             {
                 if (cancellationToken.IsCancellationRequested)
                     return;
 
-                int pi = Partition(array, low, high, onStep, onProgress, delay, cancellationToken);
+                var bounds = stack.Pop();
+                int l = bounds.Item1;
+                int h = bounds.Item2;
 
-                QuickSortRecursive(array, low, pi - 1, onStep, onProgress, delay, cancellationToken);
-                QuickSortRecursive(array, pi + 1, high, onStep, onProgress, delay, cancellationToken);
+                if (l < h)
+                {
+                    int pi = Partition(array, l, h, onStep, delayMs, cancellationToken);
+
+                    // Сначала кладем меньшую часть для оптимизации стека
+                    if (pi - l < h - pi)
+                    {
+                        stack.Push(new Tuple<int, int>(pi + 1, h));
+                        stack.Push(new Tuple<int, int>(l, pi - 1));
+                    }
+                    else
+                    {
+                        stack.Push(new Tuple<int, int>(l, pi - 1));
+                        stack.Push(new Tuple<int, int>(pi + 1, h));
+                    }
+
+                    // Прогресс
+                    _operationsDone += (h - l);
+                    if (_operationsDone % 100 == 0 || array.Length <= 100)
+                        onProgress?.Invoke((int)((float)_operationsDone / _totalOperations * 100));
+                }
             }
         }
 
         private int Partition(int[] array, int low, int high,
-                             Action<int[], int, int> onStep,
-                             Action<int> onProgress, int delay,
+                             Action<int[], int, int> onStep, double delayMs,
                              CancellationToken cancellationToken)
         {
+            // Оптимизация: выбираем медиану из трех
+            int mid = low + (high - low) / 2;
+            int pivotIndex = MedianOfThree(array, low, mid, high);
+
+            // Меняем опорный элемент с последним
+            if (pivotIndex != high)
+            {
+                Swap(array, pivotIndex, high);
+                onStep?.Invoke(array, pivotIndex, high);
+                if (delayMs > 0) PrecisionTimer.Delay(delayMs);
+            }
+
             int pivot = array[high];
             int i = low - 1;
 
@@ -61,65 +93,36 @@ namespace SortingAlgorithms
                 if (cancellationToken.IsCancellationRequested)
                     return i + 1;
 
-                operationsDone++;
-
-                // Обновляем прогресс для больших массивов
-                if (array.Length > 1000 && operationsDone % 100 == 0)
-                    onProgress?.Invoke((int)((float)operationsDone / totalOperations * 100));
-
-                // Для больших массивов показываем только часть шагов
-                if (array.Length <= 1000 || j % 5 == 0)
-                {
-                    onStep?.Invoke(array, j, high);
-                    if (delay > 0)
-                        Thread.Sleep(delay);
-                }
+                onStep?.Invoke(array, j, high);
 
                 if (array[j] < pivot)
                 {
                     i++;
-
-                    if (array.Length <= 1000 || j % 5 == 0)
-                    {
-                        onStep?.Invoke(array, i, j);
-                        if (delay > 0)
-                            Thread.Sleep(delay);
-                    }
-
-                    if (i != j)
-                    {
-                        Swap(array, i, j);
-
-                        if (array.Length <= 1000 || j % 5 == 0)
-                        {
-                            onStep?.Invoke(array, i, j);
-                            if (delay > 0)
-                                Thread.Sleep(delay);
-                        }
-                    }
+                    Swap(array, i, j);
+                    onStep?.Invoke(array, i, j);
                 }
+
+                if (delayMs > 0 && delayMs < 1.0)
+                    PrecisionTimer.Delay(delayMs);
+                else if (delayMs >= 1.0)
+                    Thread.Sleep((int)delayMs);
             }
 
-            if (array.Length <= 1000)
-            {
-                onStep?.Invoke(array, i + 1, high);
-                if (delay > 0)
-                    Thread.Sleep(delay);
-            }
-
-            if (i + 1 != high)
-            {
-                Swap(array, i + 1, high);
-
-                if (array.Length <= 1000)
-                {
-                    onStep?.Invoke(array, i + 1, high);
-                    if (delay > 0)
-                        Thread.Sleep(delay);
-                }
-            }
+            Swap(array, i + 1, high);
+            onStep?.Invoke(array, i + 1, high);
 
             return i + 1;
+        }
+
+        private int MedianOfThree(int[] array, int a, int b, int c)
+        {
+            if (array[a] > array[b])
+                SwapRef(ref a, ref b);
+            if (array[b] > array[c])
+                SwapRef(ref b, ref c);
+            if (array[a] > array[b])
+                SwapRef(ref a, ref b);
+            return b;
         }
 
         private void Swap(int[] array, int i, int j)
@@ -127,6 +130,18 @@ namespace SortingAlgorithms
             int temp = array[i];
             array[i] = array[j];
             array[j] = temp;
+        }
+
+        private void SwapRef(ref int a, ref int b)
+        {
+            int temp = a;
+            a = b;
+            b = temp;
+        }
+
+        private int EstimateOperations(int n)
+        {
+            return (int)(n * Math.Log(n + 1) * 2);
         }
     }
 }
