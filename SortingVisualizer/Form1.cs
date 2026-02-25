@@ -250,7 +250,7 @@ private void btnHelp_Click(object sender, EventArgs e)
                 "🎲 Bogo Sort - это шутка, не ждите от него скорости!\n\n" +
 
                 "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" +
-                "👆 Нажмите на любой элемент управления,\n" +
+                "👆 Наведите на любой элемент управления,\n" +
                 "   чтобы увидеть подсказку (tooltip).";
 
             MessageBox.Show(message, "📚 Помощь по статистике",
@@ -281,7 +281,7 @@ private void btnHelp_Click(object sender, EventArgs e)
                     return "   Сложность: O(n log n) - быстрый\n   Не требует дополнительной памяти";
 
                 case string s when s.Contains("Bogo"):
-                    return "   Сложность: O((n+1)!) - ужасно медленный!\n   Для 10 элементов: миллионы лет";
+                    return "   Сложность: O((n+1)!) - ужасно медленный!\n   Для 10 элементов: ~50+ миллионов шагов";
 
                 default:
                     return "   Информация недоступна";
