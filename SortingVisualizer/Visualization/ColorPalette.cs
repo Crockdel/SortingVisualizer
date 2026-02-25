@@ -13,8 +13,8 @@ namespace SortingVisualizer.Visualization
         // Основные цвета
         public static Color DefaultBar = Color.FromArgb(70, 130, 180); // Стальной синий
         public static Color SortedBar = Color.FromArgb(60, 179, 113);  // Морской зеленый
-        public static Color ActiveBar = Color.FromArgb(255, 99, 71);   // Томатный
-        public static Color CompareBar = Color.FromArgb(255, 215, 0);  // Золотой
+        public static Color ActiveBar = Color.FromArgb(255, 215, 0);   // Золотой
+        public static Color CompareBar = Color.FromArgb(255, 99, 71);  // Томатный
         public static Color Background = Color.White;
         public static Color GridLine = Color.FromArgb(240, 240, 240);
 
