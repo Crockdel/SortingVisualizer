@@ -18,13 +18,13 @@ namespace SortingAlgorithms
         {
             return new Dictionary<string, ISortingAlgorithm>
             {
-                { "Пузырьковая сортировка", new BubbleSort() },
-                { "Сортировка выбором", new SelectionSort() },
-                { "Сортировка вставками", new InsertionSort() },
-                { "Быстрая сортировка", new QuickSort() },
-                {"Пирамидальная сортировка", new HeapSort() },
-                {"Сортировка слиянием", new MergeSort() },
-                { "🥹 Bogo Sort (Глупая)", new BogoSort() }
+                { "Bubble Sort", new BubbleSort() },
+                { "Selection Sort", new SelectionSort() },
+                { "Insertion Sort", new InsertionSort() },
+                { "Quick Sort", new QuickSort() },
+                {"Heap Sort", new HeapSort() },
+                {"Merge Sort", new MergeSort() },
+                { "Bogo Sort", new BogoSort() }
             };
         }
     }
