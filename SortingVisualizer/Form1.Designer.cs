@@ -65,9 +65,10 @@ namespace SortingVisualizer
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.BackColor = System.Drawing.Color.White;
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
+            this.pictureBox1.Location = new System.Drawing.Point(9, 10);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(860, 380);
+            this.pictureBox1.Size = new System.Drawing.Size(955, 487);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.SizeChanged += new System.EventHandler(this.pictureBox1_SizeChanged);
@@ -77,9 +78,10 @@ namespace SortingVisualizer
             this.cmbAlgorithm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cmbAlgorithm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbAlgorithm.FormattingEnabled = true;
-            this.cmbAlgorithm.Location = new System.Drawing.Point(12, 400);
+            this.cmbAlgorithm.Location = new System.Drawing.Point(9, 503);
+            this.cmbAlgorithm.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbAlgorithm.Name = "cmbAlgorithm";
-            this.cmbAlgorithm.Size = new System.Drawing.Size(130, 24);
+            this.cmbAlgorithm.Size = new System.Drawing.Size(98, 21);
             this.cmbAlgorithm.TabIndex = 1;
             this.toolTip.SetToolTip(this.cmbAlgorithm, "Выберите алгоритм сортировки");
             this.cmbAlgorithm.SelectedIndexChanged += new System.EventHandler(this.cmbAlgorithm_SelectedIndexChanged);
@@ -88,9 +90,10 @@ namespace SortingVisualizer
             // 
             this.btnSort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnSort.BackColor = System.Drawing.Color.LightGreen;
-            this.btnSort.Location = new System.Drawing.Point(150, 400);
+            this.btnSort.Location = new System.Drawing.Point(112, 503);
+            this.btnSort.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnSort.Name = "btnSort";
-            this.btnSort.Size = new System.Drawing.Size(90, 30);
+            this.btnSort.Size = new System.Drawing.Size(68, 24);
             this.btnSort.TabIndex = 2;
             this.btnSort.Text = "Сортировать";
             this.toolTip.SetToolTip(this.btnSort, "Запустить сортировку");
@@ -100,9 +103,10 @@ namespace SortingVisualizer
             // btnShuffle
             // 
             this.btnShuffle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnShuffle.Location = new System.Drawing.Point(250, 400);
+            this.btnShuffle.Location = new System.Drawing.Point(188, 503);
+            this.btnShuffle.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnShuffle.Name = "btnShuffle";
-            this.btnShuffle.Size = new System.Drawing.Size(90, 30);
+            this.btnShuffle.Size = new System.Drawing.Size(68, 24);
             this.btnShuffle.TabIndex = 3;
             this.btnShuffle.Text = "Перемешать";
             this.toolTip.SetToolTip(this.btnShuffle, "Перемешать массив");
@@ -114,9 +118,10 @@ namespace SortingVisualizer
             this.btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnStop.BackColor = System.Drawing.Color.LightCoral;
             this.btnStop.Enabled = false;
-            this.btnStop.Location = new System.Drawing.Point(350, 400);
+            this.btnStop.Location = new System.Drawing.Point(262, 503);
+            this.btnStop.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(70, 30);
+            this.btnStop.Size = new System.Drawing.Size(52, 24);
             this.btnStop.TabIndex = 4;
             this.btnStop.Text = "Стоп";
             this.toolTip.SetToolTip(this.btnStop, "Остановить сортировку");
@@ -126,9 +131,10 @@ namespace SortingVisualizer
             // btnResetStats
             // 
             this.btnResetStats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnResetStats.Location = new System.Drawing.Point(430, 400);
+            this.btnResetStats.Location = new System.Drawing.Point(322, 503);
+            this.btnResetStats.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnResetStats.Name = "btnResetStats";
-            this.btnResetStats.Size = new System.Drawing.Size(90, 30);
+            this.btnResetStats.Size = new System.Drawing.Size(68, 24);
             this.btnResetStats.TabIndex = 5;
             this.btnResetStats.Text = "Сброс стат.";
             this.toolTip.SetToolTip(this.btnResetStats, "Сбросить статистику");
@@ -138,9 +144,10 @@ namespace SortingVisualizer
             // 
             this.btnHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnHelp.BackColor = System.Drawing.Color.LightBlue;
-            this.btnHelp.Location = new System.Drawing.Point(782, 503);
+            this.btnHelp.Location = new System.Drawing.Point(895, 587);
+            this.btnHelp.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnHelp.Name = "btnHelp";
-            this.btnHelp.Size = new System.Drawing.Size(90, 30);
+            this.btnHelp.Size = new System.Drawing.Size(68, 24);
             this.btnHelp.TabIndex = 16;
             this.btnHelp.Text = "Что это?";
             this.toolTip.SetToolTip(this.btnHelp, "Объяснение статистики");
@@ -150,23 +157,37 @@ namespace SortingVisualizer
             // numArraySize
             // 
             this.numArraySize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.numArraySize.Location = new System.Drawing.Point(12, 440);
-            this.numArraySize.Maximum = new decimal(new int[] {500,0,0,0});
-            this.numArraySize.Minimum = new decimal(new int[] {5,0,0,0});
+            this.numArraySize.Location = new System.Drawing.Point(9, 536);
+            this.numArraySize.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numArraySize.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.numArraySize.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             this.numArraySize.Name = "numArraySize";
-            this.numArraySize.Size = new System.Drawing.Size(80, 22);
+            this.numArraySize.Size = new System.Drawing.Size(60, 20);
             this.numArraySize.TabIndex = 6;
             this.toolTip.SetToolTip(this.numArraySize, "Размер массива (5-500)");
-            this.numArraySize.Value = new decimal(new int[] {35,0,0,0});
+            this.numArraySize.Value = new decimal(new int[] {
+            35,
+            0,
+            0,
+            0});
             this.numArraySize.ValueChanged += new System.EventHandler(this.numArraySize_ValueChanged);
             // 
             // trackSpeed
             // 
             this.trackSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.trackSpeed.Location = new System.Drawing.Point(150, 440);
+            this.trackSpeed.Location = new System.Drawing.Point(112, 536);
+            this.trackSpeed.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.trackSpeed.Maximum = 200;
             this.trackSpeed.Name = "trackSpeed";
-            this.trackSpeed.Size = new System.Drawing.Size(200, 56);
+            this.trackSpeed.Size = new System.Drawing.Size(150, 45);
             this.trackSpeed.TabIndex = 7;
             this.trackSpeed.TickFrequency = 10;
             this.trackSpeed.Value = 10;
@@ -176,18 +197,20 @@ namespace SortingVisualizer
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.Location = new System.Drawing.Point(12, 480);
+            this.progressBar.Location = new System.Drawing.Point(9, 568);
+            this.progressBar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(860, 20);
+            this.progressBar.Size = new System.Drawing.Size(954, 16);
             this.progressBar.TabIndex = 8;
             // 
             // lblAlgorithm
             // 
             this.lblAlgorithm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblAlgorithm.AutoSize = true;
-            this.lblAlgorithm.Location = new System.Drawing.Point(530, 405);
+            this.lblAlgorithm.Location = new System.Drawing.Point(398, 507);
+            this.lblAlgorithm.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblAlgorithm.Name = "lblAlgorithm";
-            this.lblAlgorithm.Size = new System.Drawing.Size(73, 16);
+            this.lblAlgorithm.Size = new System.Drawing.Size(59, 13);
             this.lblAlgorithm.TabIndex = 9;
             this.lblAlgorithm.Text = "Алгоритм:";
             // 
@@ -195,9 +218,10 @@ namespace SortingVisualizer
             // 
             this.lblSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblSpeed.AutoSize = true;
-            this.lblSpeed.Location = new System.Drawing.Point(450, 445);
+            this.lblSpeed.Location = new System.Drawing.Point(338, 540);
+            this.lblSpeed.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblSpeed.Name = "lblSpeed";
-            this.lblSpeed.Size = new System.Drawing.Size(111, 16);
+            this.lblSpeed.Size = new System.Drawing.Size(93, 13);
             this.lblSpeed.TabIndex = 10;
             this.lblSpeed.Text = "Задержка: 10 мс";
             // 
@@ -206,9 +230,10 @@ namespace SortingVisualizer
             this.lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblStatus.AutoSize = true;
             this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.lblStatus.Location = new System.Drawing.Point(763, 443);
+            this.lblStatus.Location = new System.Drawing.Point(864, 541);
+            this.lblStatus.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(65, 18);
+            this.lblStatus.Size = new System.Drawing.Size(55, 15);
             this.lblStatus.TabIndex = 11;
             this.lblStatus.Text = "Готово";
             // 
@@ -216,9 +241,10 @@ namespace SortingVisualizer
             // 
             this.lblStats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblStats.AutoSize = true;
-            this.lblStats.Location = new System.Drawing.Point(12, 510);
+            this.lblStats.Location = new System.Drawing.Point(9, 592);
+            this.lblStats.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblStats.Name = "lblStats";
-            this.lblStats.Size = new System.Drawing.Size(83, 16);
+            this.lblStats.Size = new System.Drawing.Size(65, 13);
             this.lblStats.TabIndex = 12;
             this.lblStats.Text = "Статистика";
             // 
@@ -228,9 +254,10 @@ namespace SortingVisualizer
             this.chkSound.AutoSize = true;
             this.chkSound.Checked = true;
             this.chkSound.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkSound.Location = new System.Drawing.Point(811, 406);
+            this.chkSound.Location = new System.Drawing.Point(913, 507);
+            this.chkSound.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.chkSound.Name = "chkSound";
-            this.chkSound.Size = new System.Drawing.Size(61, 20);
+            this.chkSound.Size = new System.Drawing.Size(50, 17);
             this.chkSound.TabIndex = 13;
             this.chkSound.Text = "Звук";
             this.toolTip.SetToolTip(this.chkSound, "Звуковое оповещение по окончании");
@@ -238,22 +265,29 @@ namespace SortingVisualizer
             // numExactDelay
             // 
             this.numExactDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.numExactDelay.DecimalPlaces = 0;
-            this.numExactDelay.Increment = new decimal(new int[] {10,0,0,65536});
-            this.numExactDelay.Location = new System.Drawing.Point(360, 440);
-            this.numExactDelay.Maximum = new decimal(new int[] {1000,0,0,0});
+            this.numExactDelay.Location = new System.Drawing.Point(270, 536);
+            this.numExactDelay.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numExactDelay.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.numExactDelay.Name = "numExactDelay";
-            this.numExactDelay.Size = new System.Drawing.Size(80, 22);
+            this.numExactDelay.Size = new System.Drawing.Size(60, 20);
             this.numExactDelay.TabIndex = 14;
             this.toolTip.SetToolTip(this.numExactDelay, "Точная задержка в миллисекундах (0 - 1000)");
-            this.numExactDelay.Value = new decimal(new int[] {10,0,0,0});
+            this.numExactDelay.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             this.numExactDelay.ValueChanged += new System.EventHandler(this.numExactDelay_ValueChanged);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(884, 541);
+            this.ClientSize = new System.Drawing.Size(972, 618);
             this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.numExactDelay);
             this.Controls.Add(this.chkSound);
@@ -270,8 +304,9 @@ namespace SortingVisualizer
             this.Controls.Add(this.btnSort);
             this.Controls.Add(this.cmbAlgorithm);
             this.Controls.Add(this.pictureBox1);
-            this.MaximumSize = new System.Drawing.Size(1920, 1080);
-            this.MinimumSize = new System.Drawing.Size(900, 580);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.MaximumSize = new System.Drawing.Size(1444, 885);
+            this.MinimumSize = new System.Drawing.Size(679, 479);
             this.Name = "MainForm";
             this.Text = "Визуализатор сортировок";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
