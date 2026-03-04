@@ -11,7 +11,9 @@ namespace SortingVisualizer
         private Button btnShuffle;
         private Button btnStop;
         private Button btnResetStats;
-        private Button btnHelp;  // Кнопка помощи
+        private Button btnExplainBigO;
+        private Button btnExplainAlgorithm;
+        private Button btnExplainVisualization;
         private NumericUpDown numArraySize;
         private TrackBar trackSpeed;
         private ProgressBar progressBar;
@@ -41,7 +43,6 @@ namespace SortingVisualizer
             this.btnShuffle = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnResetStats = new System.Windows.Forms.Button();
-            this.btnHelp = new System.Windows.Forms.Button();
             this.numArraySize = new System.Windows.Forms.NumericUpDown();
             this.trackSpeed = new System.Windows.Forms.TrackBar();
             this.progressBar = new System.Windows.Forms.ProgressBar();
@@ -52,6 +53,9 @@ namespace SortingVisualizer
             this.chkSound = new System.Windows.Forms.CheckBox();
             this.numExactDelay = new System.Windows.Forms.NumericUpDown();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.btnExplainBigO = new System.Windows.Forms.Button();
+            this.btnExplainAlgorithm = new System.Windows.Forms.Button();
+            this.btnExplainVisualization = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numArraySize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackSpeed)).BeginInit();
@@ -66,9 +70,9 @@ namespace SortingVisualizer
             this.pictureBox1.BackColor = System.Drawing.Color.White;
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Location = new System.Drawing.Point(9, 10);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(955, 487);
+            this.pictureBox1.Size = new System.Drawing.Size(955, 497);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.SizeChanged += new System.EventHandler(this.pictureBox1_SizeChanged);
@@ -78,8 +82,8 @@ namespace SortingVisualizer
             this.cmbAlgorithm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cmbAlgorithm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbAlgorithm.FormattingEnabled = true;
-            this.cmbAlgorithm.Location = new System.Drawing.Point(9, 503);
-            this.cmbAlgorithm.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmbAlgorithm.Location = new System.Drawing.Point(9, 513);
+            this.cmbAlgorithm.Margin = new System.Windows.Forms.Padding(2);
             this.cmbAlgorithm.Name = "cmbAlgorithm";
             this.cmbAlgorithm.Size = new System.Drawing.Size(98, 21);
             this.cmbAlgorithm.TabIndex = 1;
@@ -90,8 +94,8 @@ namespace SortingVisualizer
             // 
             this.btnSort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnSort.BackColor = System.Drawing.Color.LightGreen;
-            this.btnSort.Location = new System.Drawing.Point(112, 503);
-            this.btnSort.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnSort.Location = new System.Drawing.Point(112, 513);
+            this.btnSort.Margin = new System.Windows.Forms.Padding(2);
             this.btnSort.Name = "btnSort";
             this.btnSort.Size = new System.Drawing.Size(68, 24);
             this.btnSort.TabIndex = 2;
@@ -103,8 +107,8 @@ namespace SortingVisualizer
             // btnShuffle
             // 
             this.btnShuffle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnShuffle.Location = new System.Drawing.Point(188, 503);
-            this.btnShuffle.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnShuffle.Location = new System.Drawing.Point(188, 513);
+            this.btnShuffle.Margin = new System.Windows.Forms.Padding(2);
             this.btnShuffle.Name = "btnShuffle";
             this.btnShuffle.Size = new System.Drawing.Size(68, 24);
             this.btnShuffle.TabIndex = 3;
@@ -118,8 +122,8 @@ namespace SortingVisualizer
             this.btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnStop.BackColor = System.Drawing.Color.LightCoral;
             this.btnStop.Enabled = false;
-            this.btnStop.Location = new System.Drawing.Point(262, 503);
-            this.btnStop.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnStop.Location = new System.Drawing.Point(262, 513);
+            this.btnStop.Margin = new System.Windows.Forms.Padding(2);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(52, 24);
             this.btnStop.TabIndex = 4;
@@ -131,8 +135,8 @@ namespace SortingVisualizer
             // btnResetStats
             // 
             this.btnResetStats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnResetStats.Location = new System.Drawing.Point(322, 503);
-            this.btnResetStats.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnResetStats.Location = new System.Drawing.Point(322, 513);
+            this.btnResetStats.Margin = new System.Windows.Forms.Padding(2);
             this.btnResetStats.Name = "btnResetStats";
             this.btnResetStats.Size = new System.Drawing.Size(68, 24);
             this.btnResetStats.TabIndex = 5;
@@ -140,25 +144,11 @@ namespace SortingVisualizer
             this.toolTip.SetToolTip(this.btnResetStats, "Сбросить статистику");
             this.btnResetStats.Click += new System.EventHandler(this.btnResetStats_Click);
             // 
-            // btnHelp
-            // 
-            this.btnHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnHelp.BackColor = System.Drawing.Color.LightBlue;
-            this.btnHelp.Location = new System.Drawing.Point(895, 587);
-            this.btnHelp.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.btnHelp.Name = "btnHelp";
-            this.btnHelp.Size = new System.Drawing.Size(68, 24);
-            this.btnHelp.TabIndex = 16;
-            this.btnHelp.Text = "Что это?";
-            this.toolTip.SetToolTip(this.btnHelp, "Объяснение статистики");
-            this.btnHelp.UseVisualStyleBackColor = false;
-            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
-            // 
             // numArraySize
             // 
             this.numArraySize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.numArraySize.Location = new System.Drawing.Point(9, 536);
-            this.numArraySize.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numArraySize.Location = new System.Drawing.Point(9, 546);
+            this.numArraySize.Margin = new System.Windows.Forms.Padding(2);
             this.numArraySize.Maximum = new decimal(new int[] {
             500,
             0,
@@ -183,8 +173,8 @@ namespace SortingVisualizer
             // trackSpeed
             // 
             this.trackSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.trackSpeed.Location = new System.Drawing.Point(112, 536);
-            this.trackSpeed.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.trackSpeed.Location = new System.Drawing.Point(112, 546);
+            this.trackSpeed.Margin = new System.Windows.Forms.Padding(2);
             this.trackSpeed.Maximum = 200;
             this.trackSpeed.Name = "trackSpeed";
             this.trackSpeed.Size = new System.Drawing.Size(150, 45);
@@ -197,8 +187,8 @@ namespace SortingVisualizer
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.Location = new System.Drawing.Point(9, 568);
-            this.progressBar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.progressBar.Location = new System.Drawing.Point(9, 578);
+            this.progressBar.Margin = new System.Windows.Forms.Padding(2);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(954, 16);
             this.progressBar.TabIndex = 8;
@@ -207,7 +197,7 @@ namespace SortingVisualizer
             // 
             this.lblAlgorithm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblAlgorithm.AutoSize = true;
-            this.lblAlgorithm.Location = new System.Drawing.Point(398, 507);
+            this.lblAlgorithm.Location = new System.Drawing.Point(398, 517);
             this.lblAlgorithm.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblAlgorithm.Name = "lblAlgorithm";
             this.lblAlgorithm.Size = new System.Drawing.Size(59, 13);
@@ -218,7 +208,7 @@ namespace SortingVisualizer
             // 
             this.lblSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblSpeed.AutoSize = true;
-            this.lblSpeed.Location = new System.Drawing.Point(338, 540);
+            this.lblSpeed.Location = new System.Drawing.Point(338, 550);
             this.lblSpeed.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblSpeed.Name = "lblSpeed";
             this.lblSpeed.Size = new System.Drawing.Size(93, 13);
@@ -230,7 +220,7 @@ namespace SortingVisualizer
             this.lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblStatus.AutoSize = true;
             this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.lblStatus.Location = new System.Drawing.Point(864, 541);
+            this.lblStatus.Location = new System.Drawing.Point(864, 551);
             this.lblStatus.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(55, 15);
@@ -241,7 +231,7 @@ namespace SortingVisualizer
             // 
             this.lblStats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblStats.AutoSize = true;
-            this.lblStats.Location = new System.Drawing.Point(9, 592);
+            this.lblStats.Location = new System.Drawing.Point(9, 602);
             this.lblStats.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblStats.Name = "lblStats";
             this.lblStats.Size = new System.Drawing.Size(65, 13);
@@ -254,8 +244,8 @@ namespace SortingVisualizer
             this.chkSound.AutoSize = true;
             this.chkSound.Checked = true;
             this.chkSound.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkSound.Location = new System.Drawing.Point(913, 507);
-            this.chkSound.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.chkSound.Location = new System.Drawing.Point(913, 517);
+            this.chkSound.Margin = new System.Windows.Forms.Padding(2);
             this.chkSound.Name = "chkSound";
             this.chkSound.Size = new System.Drawing.Size(50, 17);
             this.chkSound.TabIndex = 13;
@@ -265,8 +255,8 @@ namespace SortingVisualizer
             // numExactDelay
             // 
             this.numExactDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.numExactDelay.Location = new System.Drawing.Point(270, 536);
-            this.numExactDelay.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numExactDelay.Location = new System.Drawing.Point(270, 546);
+            this.numExactDelay.Margin = new System.Windows.Forms.Padding(2);
             this.numExactDelay.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -283,12 +273,50 @@ namespace SortingVisualizer
             0});
             this.numExactDelay.ValueChanged += new System.EventHandler(this.numExactDelay_ValueChanged);
             // 
+            // btnExplainBigO
+            // 
+            this.btnExplainBigO.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExplainBigO.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.btnExplainBigO.Location = new System.Drawing.Point(844, 599);
+            this.btnExplainBigO.Name = "btnExplainBigO";
+            this.btnExplainBigO.Size = new System.Drawing.Size(120, 23);
+            this.btnExplainBigO.TabIndex = 19;
+            this.btnExplainBigO.Text = "🔢 Что такое O(n)?";
+            this.toolTip.SetToolTip(this.btnExplainBigO, "Объяснение нотации Big O");
+            this.btnExplainBigO.UseVisualStyleBackColor = false;
+            this.btnExplainBigO.Click += new System.EventHandler(this.btnExplainBigO_Click);
+            // 
+            // btnExplainAlgorithm
+            // 
+            this.btnExplainAlgorithm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExplainAlgorithm.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.btnExplainAlgorithm.Location = new System.Drawing.Point(531, 541);
+            this.btnExplainAlgorithm.Name = "btnExplainAlgorithm";
+            this.btnExplainAlgorithm.Size = new System.Drawing.Size(120, 30);
+            this.btnExplainAlgorithm.TabIndex = 17;
+            this.btnExplainAlgorithm.Text = "📚 Об алгоритме";
+            this.toolTip.SetToolTip(this.btnExplainAlgorithm, "Научное объяснение выбранного алгоритма");
+            this.btnExplainAlgorithm.UseVisualStyleBackColor = false;
+            this.btnExplainAlgorithm.Click += new System.EventHandler(this.btnExplainAlgorithm_Click);
+            // 
+            // btnExplainVisualization
+            // 
+            this.btnExplainVisualization.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExplainVisualization.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.btnExplainVisualization.Location = new System.Drawing.Point(690, 541);
+            this.btnExplainVisualization.Name = "btnExplainVisualization";
+            this.btnExplainVisualization.Size = new System.Drawing.Size(130, 30);
+            this.btnExplainVisualization.TabIndex = 18;
+            this.btnExplainVisualization.Text = "📊 О визуализации";
+            this.toolTip.SetToolTip(this.btnExplainVisualization, "Научное объяснение визуализации");
+            this.btnExplainVisualization.UseVisualStyleBackColor = false;
+            this.btnExplainVisualization.Click += new System.EventHandler(this.btnExplainVisualization_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(972, 618);
-            this.Controls.Add(this.btnHelp);
+            this.ClientSize = new System.Drawing.Size(972, 628);
             this.Controls.Add(this.numExactDelay);
             this.Controls.Add(this.chkSound);
             this.Controls.Add(this.lblStats);
@@ -302,9 +330,12 @@ namespace SortingVisualizer
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.btnShuffle);
             this.Controls.Add(this.btnSort);
+            this.Controls.Add(this.btnExplainAlgorithm);
+            this.Controls.Add(this.btnExplainVisualization);
+            this.Controls.Add(this.btnExplainBigO);
             this.Controls.Add(this.cmbAlgorithm);
             this.Controls.Add(this.pictureBox1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximumSize = new System.Drawing.Size(1444, 885);
             this.MinimumSize = new System.Drawing.Size(679, 479);
             this.Name = "MainForm";
