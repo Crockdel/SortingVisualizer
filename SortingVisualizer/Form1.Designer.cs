@@ -175,7 +175,7 @@ namespace SortingVisualizer
             this.trackSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.trackSpeed.Location = new System.Drawing.Point(111, 545);
             this.trackSpeed.Margin = new System.Windows.Forms.Padding(2);
-            this.trackSpeed.Maximum = 200;
+            this.trackSpeed.Maximum = 1000;
             this.trackSpeed.Name = "trackSpeed";
             this.trackSpeed.Size = new System.Drawing.Size(164, 45);
             this.trackSpeed.TabIndex = 7;
