@@ -56,6 +56,8 @@ namespace SortingVisualizer
             this.btnExplainBigO = new System.Windows.Forms.Button();
             this.btnExplainAlgorithm = new System.Windows.Forms.Button();
             this.btnExplainVisualization = new System.Windows.Forms.Button();
+            this.WindowState = FormWindowState.Normal;  // Обычное состояние при запуске
+            this.StartPosition = FormStartPosition.CenterScreen;  // Центрировать при запуске
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numArraySize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackSpeed)).BeginInit();
@@ -346,6 +348,13 @@ namespace SortingVisualizer
             ((System.ComponentModel.ISupportInitialize)(this.numExactDelay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
+            // Настройки формы для правильного ресайза:
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;  // Важно! Включаем автоматическую прокрутку
+            this.MinimumSize = new System.Drawing.Size(900, 600);
+            this.MaximumSize = new System.Drawing.Size(0, 0);  // 0 = без ограничений
+            this.ResizeRedraw = true;  // Перерисовывать при изменении размера
 
         }
     }
