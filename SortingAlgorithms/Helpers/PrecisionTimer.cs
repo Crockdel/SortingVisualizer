@@ -9,99 +9,128 @@ using System.Threading;
 
 namespace SortingVisualizer.Helpers
 {
-
-    /// Высокоточный таймер для микро-задержек
-
+    /// <summary>
+    /// Высокоточный таймер для микро-задержек в алгоритмах сортировки
+    /// </summary>
     public static class PrecisionTimer
     {
-        // Импортируем WinAPI функции для высокоточных задержек
         [DllImport("winmm.dll", EntryPoint = "timeBeginPeriod")]
         private static extern uint TimeBeginPeriod(uint uMilliseconds);
 
         [DllImport("winmm.dll", EntryPoint = "timeEndPeriod")]
         private static extern uint TimeEndPeriod(uint uMilliseconds);
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool QueryPerformanceFrequency(out long frequency);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool QueryPerformanceCounter(out long count);
-
         private static readonly long _frequency;
-        private static bool _highResSupported;
+        private static readonly bool _isHighResolution;
+        private static readonly double _ticksPerMicrosecond;
+        private static int _timePeriodSet;
 
         static PrecisionTimer()
         {
-            _highResSupported = QueryPerformanceFrequency(out _frequency);
+            _isHighResolution = Stopwatch.IsHighResolution;
+            _frequency = Stopwatch.Frequency;
+            _ticksPerMicrosecond = _frequency / 1000000.0;
         }
 
-    
-        /// Точная задержка в миллисекундах (поддерживает дробные значения)
-    
+        /// <summary>
+        /// Точная задержка в миллисекундах (оптимизировано для 0-1 мс)
+        /// </summary>
         public static void Delay(double milliseconds)
         {
             if (milliseconds <= 0) return;
 
-            // Для задержек меньше 1 мс используем высокоточный таймер
-            if (milliseconds < 1.0 && _highResSupported)
+            // Устанавливаем высокое разрешение таймера
+            if (Interlocked.CompareExchange(ref _timePeriodSet, 1, 0) == 0)
             {
-                HighResDelay(milliseconds);
+                TimeBeginPeriod(1);
+            }
+
+            // Для задержек >= 1 мс используем Thread.Sleep с высокой точностью
+            if (milliseconds >= 1.0)
+            {
+                int ms = (int)milliseconds;
+                Thread.Sleep(ms);
+
+                // Остаток обрабатываем микро-задержкой
+                double remainder = milliseconds - ms;
+                if (remainder > 0.001)
+                {
+                    SpinDelay((long)(remainder * 1000));
+                }
             }
             else
             {
-                // Для задержек >= 1 мс используем Thread.Sleep
-                int ms = (int)Math.Floor(milliseconds);
-                if (ms > 0)
-                {
-                    Thread.Sleep(ms);
-                }
+                // Для задержек < 1 мс используем только SpinWait
+                SpinDelay((long)(milliseconds * 1000));
+            }
+        }
 
-                // Остаток микросекунд добиваем высокоточным таймером
-                double remainder = milliseconds - ms;
-                if (remainder > 0.001) // больше 1 микросекунды
+        /// <summary>
+        /// Задержка в микросекундах с использованием SpinWait (без переключения контекста)
+        /// </summary>
+        private static void SpinDelay(long microseconds)
+        {
+            if (microseconds <= 0) return;
+
+            long start = Stopwatch.GetTimestamp();
+            long targetTicks = (long)(microseconds * _ticksPerMicrosecond);
+            long target = start + targetTicks;
+
+            // Оптимизированное активное ожидание
+            int spinCount = 0;
+            while (Stopwatch.GetTimestamp() < target)
+            {
+                spinCount++;
+
+                // Для очень маленьких задержек используем интенсивный SpinWait
+                if (microseconds < 10)
                 {
-                    HighResDelay(remainder);
+                    Thread.SpinWait(10);
+                }
+                // Для средних задержек используем прогрессивный SpinWait
+                else if (microseconds < 100)
+                {
+                    Thread.SpinWait(Math.Min(100, spinCount));
+                }
+                // Для задержек близких к 1 мс иногда отдаем управление
+                else if (target - Stopwatch.GetTimestamp() > _frequency / 10000) // > 0.1 мс
+                {
+                    Thread.Sleep(0); // Yield
                 }
             }
         }
 
-        private static void HighResDelay(double milliseconds)
+        /// <summary>
+        /// Быстрая задержка для использования в циклах сортировки
+        /// </summary>
+        public static void FastDelay(double milliseconds, ref long lastTimestamp)
         {
-            // Устанавливаем высокое разрешение таймера
-            TimeBeginPeriod(1);
+            if (milliseconds <= 0) return;
 
-            long start, current;
-            QueryPerformanceCounter(out start);
+            long now = Stopwatch.GetTimestamp();
+            long targetTicks = (long)(milliseconds * _ticksPerMicrosecond * 1000); // в тиках
+            long target = lastTimestamp + targetTicks;
 
-            double targetTicks = (_frequency * milliseconds) / 1000.0;
-            long targetCount = (long)targetTicks;
-
-            do
+            if (target > now)
             {
-                QueryPerformanceCounter(out current);
-                // Для очень маленьких задержек используем SpinWait
-                if (targetTicks < 1000) // меньше 1 мс
+                // Активное ожидание
+                while (Stopwatch.GetTimestamp() < target)
                 {
                     Thread.SpinWait(10);
                 }
-            } while ((current - start) < targetCount);
+            }
 
-            TimeEndPeriod(1);
+            lastTimestamp = Stopwatch.GetTimestamp();
         }
 
-    
-        /// Активное ожидание с минимальной задержкой
-    
-        public static void SpinDelay(int nanoseconds)
+        /// <summary>
+        /// Сброс точности таймера (вызывать при завершении)
+        /// </summary>
+        public static void Cleanup()
         {
-            if (nanoseconds <= 0) return;
-
-            var start = DateTime.Now.Ticks;
-            var target = start + (nanoseconds / 100); // конвертация в тики (1 тик = 100 нс)
-
-            while (DateTime.Now.Ticks < target)
+            if (Interlocked.Exchange(ref _timePeriodSet, 0) == 1)
             {
-                Thread.SpinWait(1);
+                TimeEndPeriod(1);
             }
         }
     }

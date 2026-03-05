@@ -296,11 +296,7 @@ namespace SortingVisualizer
 
         private void numExactDelay_ValueChanged(object sender, EventArgs e)
         {
-            // Синхронизируем ползунок с точным значением (округляем до целого)
-            if (trackSpeed.Value != (int)Math.Round(numExactDelay.Value))
-            {
-                trackSpeed.Value = (int)Math.Round(numExactDelay.Value);
-            }
+            trackSpeed.Value = (int)Math.Round(numExactDelay.Value);
             UpdateDelayLabel();
         }
 
@@ -309,10 +305,8 @@ namespace SortingVisualizer
             double delay = (double)numExactDelay.Value;
             if (delay == 0)
                 lblSpeed.Text = "Задержка: 0 мс (макс. скорость)";
-            else if (delay < 1)
-                lblSpeed.Text = $"Задержка: {delay:F2} мс";
             else
-                lblSpeed.Text = $"Задержка: {delay:F0} мс";
+                lblSpeed.Text = $"Задержка: {delay:F2} мс";
         }
 
         private void pictureBox1_SizeChanged(object sender, EventArgs e)
@@ -361,6 +355,7 @@ namespace SortingVisualizer
         {
             _sortController?.StopSorting();
             _renderer?.Dispose();
+            PrecisionTimer.Cleanup();
             base.OnFormClosing(e);
         }
     }

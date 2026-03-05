@@ -255,6 +255,12 @@ namespace SortingVisualizer
             // numExactDelay
             // 
             this.numExactDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.numExactDelay.DecimalPlaces = 2;
+            this.numExactDelay.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
             this.numExactDelay.Location = new System.Drawing.Point(280, 545);
             this.numExactDelay.Margin = new System.Windows.Forms.Padding(2);
             this.numExactDelay.Maximum = new decimal(new int[] {
