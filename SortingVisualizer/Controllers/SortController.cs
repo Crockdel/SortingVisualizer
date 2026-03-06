@@ -18,8 +18,11 @@ namespace SortingVisualizer.Controllers
         private bool _isSorting;
         private Stopwatch _stepTimer;
         private int _stepsSinceLastUpdate;
-        private const int MAX_UPDATES_PER_SECOND = 60;
+        private const int MAX_UPDATES_PER_SECOND = 30;
         private long _lastDelayTimestamp;
+
+        // Для отслеживания обменов
+        private int[] _previousArrayState;
 
         public event Action<SortArray, int, int> StepVisualized;
         public event Action<int> ProgressUpdated;
@@ -60,6 +63,9 @@ namespace SortingVisualizer.Controllers
             _stepTimer.Restart();
             _lastDelayTimestamp = Stopwatch.GetTimestamp();
 
+            // Сохраняем начальное состояние массива для отслеживания обменов
+            _previousArrayState = (int[])array.Values.Clone();
+
             StatusChanged?.Invoke("Сортировка...");
 
             try
@@ -67,20 +73,17 @@ namespace SortingVisualizer.Controllers
                 var arrayToSort = array.Clone();
                 var cancellationToken = _cancellationTokenSource.Token;
 
-                // Определяем режим визуализации
-                bool fastMode = delayMs < 0.1; // Режим максимальной скорости
-                bool microMode = delayMs > 0 && delayMs < 1000.0; // Режим микро-задержек
+                bool fastMode = delayMs < 0.1;
+                bool microMode = delayMs > 0 && delayMs < 1.0;
 
                 await Task.Run(() =>
                 {
                     if (microMode)
                     {
-                        // Для микро-задержек используем специальную версию
                         RunSortWithMicroDelay(arrayToSort, algorithm, delayMs, cancellationToken);
                     }
                     else
                     {
-                        // Обычный режим
                         algorithm.Sort(arrayToSort.Values,
                             (arr, i1, i2) => OnStep(arr, i1, i2, array, fastMode),
                             (progress) => ProgressUpdated?.Invoke(progress),
@@ -106,20 +109,16 @@ namespace SortingVisualizer.Controllers
                 _cancellationTokenSource?.Dispose();
                 _cancellationTokenSource = null;
                 _stepTimer.Stop();
-                PrecisionTimer.Cleanup(); // Важно! Сбрасываем таймер
+                _previousArrayState = null;
             }
         }
 
-        /// <summary>
-        /// Специальная версия для микро-задержек (0.01 - 0.99 мс)
-        /// </summary>
         private void RunSortWithMicroDelay(SortArray array, ISortingAlgorithm algorithm,
                                           double delayMs, CancellationToken cancellationToken)
         {
             var tempArray = (int[])array.Values.Clone();
             long lastTimestamp = Stopwatch.GetTimestamp();
 
-            // Подписываемся на шаги алгоритма
             algorithm.Sort(tempArray,
                 (arr, i1, i2) =>
                 {
@@ -128,8 +127,31 @@ namespace SortingVisualizer.Controllers
                     // Обновляем массив
                     array.UpdateFrom(arr);
 
-                    // Ограничиваем частоту обновления
+                    // Определяем, был ли обмен
+                    if (i1 >= 0 && i2 >= 0 && i1 < arr.Length && i2 < arr.Length)
+                    {
+                        _statistics.IncrementComparisons();
+
+                        // Проверяем, отличаются ли значения в текущем массиве от предыдущего состояния
+                        if (_previousArrayState != null &&
+                            i1 < _previousArrayState.Length &&
+                            i2 < _previousArrayState.Length)
+                        {
+                            // Если значения поменялись местами, значит был обмен
+                            if (_previousArrayState[i1] != arr[i1] ||
+                                _previousArrayState[i2] != arr[i2])
+                            {
+                                _statistics.IncrementSwaps();
+                            }
+                        }
+
+                        // Обновляем предыдущее состояние
+                        _previousArrayState = (int[])arr.Clone();
+                    }
+
+                    _statistics.IncrementSteps();
                     _stepsSinceLastUpdate++;
+
                     if (_stepTimer.ElapsedMilliseconds >= 1000 / MAX_UPDATES_PER_SECOND)
                     {
                         StepVisualized?.Invoke(array, i1, i2);
@@ -137,21 +159,13 @@ namespace SortingVisualizer.Controllers
                         _stepsSinceLastUpdate = 0;
                     }
 
-                    // Микро-задержка
                     if (delayMs > 0)
                     {
                         PrecisionTimer.FastDelay(delayMs, ref lastTimestamp);
                     }
-
-                    // Обновляем статистику
-                    _statistics.IncrementSteps();
-                    if (i1 >= 0 && i2 >= 0)
-                    {
-                        _statistics.IncrementComparisons();
-                    }
                 },
                 null,
-                0, // Передаем 0, чтобы алгоритм не использовал свои задержки
+                0,
                 cancellationToken);
         }
 
@@ -160,20 +174,30 @@ namespace SortingVisualizer.Controllers
             _statistics.IncrementSteps();
             _stepsSinceLastUpdate++;
 
-            if (index1 >= 0 && index2 >= 0)
+            // Определяем, был ли обмен
+            if (index1 >= 0 && index2 >= 0 && index1 < arr.Length && index2 < arr.Length)
             {
                 _statistics.IncrementComparisons();
 
-                if (originalArray.Values[index1] != arr[index1] ||
-                    originalArray.Values[index2] != arr[index2])
+                // Проверяем, отличаются ли значения в текущем массиве от предыдущего состояния
+                if (_previousArrayState != null &&
+                    index1 < _previousArrayState.Length &&
+                    index2 < _previousArrayState.Length)
                 {
-                    _statistics.IncrementSwaps();
+                    // Если значения поменялись местами, значит был обмен
+                    if (_previousArrayState[index1] != arr[index1] ||
+                        _previousArrayState[index2] != arr[index2])
+                    {
+                        _statistics.IncrementSwaps();
+                    }
                 }
+
+                // Обновляем предыдущее состояние
+                _previousArrayState = (int[])arr.Clone();
             }
 
             originalArray.UpdateFrom(arr);
 
-            // В быстром режиме обновляем визуализацию реже
             if (fastMode)
             {
                 if (_stepTimer.ElapsedMilliseconds >= 1000 / MAX_UPDATES_PER_SECOND)
@@ -192,7 +216,6 @@ namespace SortingVisualizer.Controllers
         public void StopSorting()
         {
             _cancellationTokenSource?.Cancel();
-            PrecisionTimer.Cleanup();
         }
     }
 }
