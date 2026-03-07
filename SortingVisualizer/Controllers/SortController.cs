@@ -74,7 +74,7 @@ namespace SortingVisualizer.Controllers
                 var cancellationToken = _cancellationTokenSource.Token;
 
                 bool fastMode = delayMs < 0.1;
-                bool microMode = delayMs > 0 && delayMs < 1.0;
+                bool microMode = delayMs > 0 && delayMs < 1000.0;
 
                 await Task.Run(() =>
                 {
