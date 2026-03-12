@@ -31,7 +31,7 @@ namespace SortingVisualizer.Models
             StartTime = DateTime.Now;
         }
 
-        public void IncrementSteps() => Steps++;
+        public void IncrementSteps() => Steps=Comparisons+Swaps;
         public void IncrementComparisons() => Comparisons++;
         public void IncrementSwaps() => Swaps++;
 
