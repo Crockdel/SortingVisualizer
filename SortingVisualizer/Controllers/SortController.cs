@@ -18,7 +18,7 @@ namespace SortingVisualizer.Controllers
         private bool _isSorting;
         private Stopwatch _stepTimer;
         private int _stepsSinceLastUpdate;
-        private const int MAX_UPDATES_PER_SECOND = 30;
+        private const int MAX_UPDATES_PER_SECOND = 60;
         private long _lastDelayTimestamp;
 
         // Для отслеживания обменов
