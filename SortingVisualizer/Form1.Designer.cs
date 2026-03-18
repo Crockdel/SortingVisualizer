@@ -37,6 +37,7 @@ namespace SortingVisualizer
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.cmbAlgorithm = new System.Windows.Forms.ComboBox();
             this.btnSort = new System.Windows.Forms.Button();
@@ -342,6 +343,7 @@ namespace SortingVisualizer
             this.Controls.Add(this.btnExplainBigO);
             this.Controls.Add(this.cmbAlgorithm);
             this.Controls.Add(this.pictureBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MinimumSize = new System.Drawing.Size(900, 600);
             this.Name = "MainForm";
